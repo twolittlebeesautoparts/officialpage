@@ -1,1 +1,335 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Two Little Bees Auto Parts</title> <meta name="description" content="Quality used auto parts. Fast, honest, nationwide shipping." /> <style> :root{ --bg:#0b0f14; --panel:#111827; --accent:#f4c430; --accent2:#ffb703; --text:#f9fafb; --muted:#9ca3af; } *{box-sizing:border-box;margin:0;padding:0} body{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background: radial-gradient(900px 500px at 15% -10%, #1f2937, transparent), var(--bg); color:var(--text); min-height:100vh; } header{ display:flex; justify-content:space-between; align-items:center; padding:18px 32px; border-bottom:1px solid rgba(255,255,255,.08); background:rgba(11,15,20,.9); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10; } .logo{ display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.5px; font-size:1.15rem; } .bee{ width:38px;height:38px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:grid;place-items:center; color:#000;font-weight:900; } nav a{ color:var(--muted); text-decoration:none; margin-left:24px; font-weight:700; } nav a:hover{color:var(--text)} nav a.cta{ color:#000; background:linear-gradient(135deg,var(--accent),var(--accent2)); padding:8px 14px; border-radius:999px; } .hero{ max-width:1200px; margin:auto; padding:56px 32px 32px; display:grid; grid-template-columns:1.1fr .9fr; gap:40px; } .hero h1{ font-size:clamp(2.2rem,4vw,3.2rem); line-height:1.1; margin-bottom:18px; } .hero p{ color:var(--muted); font-size:1.05rem; max-width:520px; margin-bottom:28px; } .cta{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:28px; } .btn{ padding:14px 22px; border-radius:12px; font-weight:900; text-decoration:none; border:1px solid transparent; transition:.2s ease; } .btn.primary{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#000; } .btn.secondary{ border-color:rgba(255,255,255,.18); color:var(--text); } .btn.secondary:hover{ background:rgba(255,255,255,.06); } .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; } .stat{ background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px; text-align:center; } .stat h3{ color:var(--accent); font-size:1.6rem; } .stat span{ color:var(--muted); font-size:.9rem; } .card{ background:#111827; border:1px solid rgba(255,255,255,.18); border-radius:18px; padding:26px; box-shadow:0 30px 60px rgba(0,0,0,.55); } section.features{ max-width:1200px; margin:24px auto 0; padding:0 32px 72px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; } .feature h4{margin-bottom:8px} .feature p{color:var(--muted);font-size:.95rem} /* MAP */ .map-section{ border-top:1px solid rgba(255,255,255,.08); background:#0b0f14; padding:32px; } .map-section h3{ margin-bottom:16px; font-size:1.2rem; } .map-wrap{ width:100%; height:360px; border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,.18); box-shadow:0 30px 60px rgba(0,0,0,.6); } .map-wrap iframe{ width:100%; height:100%; border:0; filter:grayscale(100%) contrast(1.1) brightness(.9); } footer{ border-top:1px solid rgba(255,255,255,.08); padding:32px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; background:#0b0f14; } footer span{ color:var(--muted); font-size:.9rem; max-width:360px; } @media(max-width:900px){ .hero{grid-template-columns:1fr} nav{display:none} } </style> </head> <body> <header> <div class="logo"> <div class="bee">🐝</div> <span>Two Little Bees Auto Parts</span> </div> <nav> <a href="#">Home</a> <a href="#features">Why Us</a> <a class="cta" href="https://twolittlebeesautoparts.github.io/">Enter Inventory</a> </nav> </header> <main> <section class="hero"> <div> <h1>Quality Used Auto Parts.<br>Fast. Honest. Nationwide.</h1> <p> Engines, transmissions, body parts, and more. This page is the front door — our live inventory system is just one click away. </p> <div class="cta"> <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a> <a class="btn secondary" href="#contact">Call for Parts</a> </div> <div class="stats"> <div class="stat"> <h3>10K+</h3> <span>Parts Available</span> </div> <div class="stat"> <h3>1985–2025</h3> <span>Vehicle Coverage</span> </div> <div class="stat"> <h3>Nationwide</h3> <span>Shipping</span> </div> </div> </div> <div class="card"> <h3 style="margin-bottom:14px">What We Sell</h3> <ul style="line-height:1.9;color:var(--muted)"> <li>Engines & Transmissions</li> <li>Suspension & Drivetrain</li> <li>Body Panels & Interior</li> <li>Electrical & Modules</li> <li>OEM Used Auto Parts</li> </ul> </div> </section> <section id="features" class="features"> <div class="card feature"> <h4>Real Inventory</h4> <p>Live stock tied directly to our internal system.</p> </div> <div class="card feature"> <h4>VIN-Verified</h4> <p>Every part traced back to its source vehicle.</p> </div> <div class="card feature"> <h4>Fast Quotes</h4> <p>Call, click, or search — we move quick.</p> </div> <div class="card feature"> <h4>Built to Scale</h4> <p>This page can sit in front of any app or platform.</p> </div> </section> </main> <!-- MAP --> <section class="map-section"> <h3>📍 Visit Us</h3> <div class="map-wrap"> <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=507+S+Tibbs+Ave+Indianapolis+IN&output=embed"> </iframe> </div> </section> <footer id="contact"> <span>© 2026 Two Little Bees Auto Parts</span> <span> 📞 <a href="tel:3172437777" style="color:var(--accent);font-weight:800;text-decoration:none">(317) 243-7777</a><br> 📍 <a href="https://www.google.com/maps/search/?api=1&query=507+S+Tibbs+Ave" target="_blank" style="color:var(--accent);font-weight:800;text-decoration:none">507 S Tibbs Ave</a> </span> <span> 🕒 <strong style="color:var(--text)">Hours</strong><br> Mon–Fri: 9–5<br> Sat: 9–4<br> Sun: Closed </span> </footer> <a href="tel:3172437777" style="position:fixed;bottom:20px;right:20px; background:linear-gradient(135deg,#f4c430,#ffb703); color:#000;padding:16px 20px;border-radius:999px; font-weight:900;text-decoration:none; box-shadow:0 20px 40px rgba(0,0,0,.6);z-index:999"> 📞 Call Now </a> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two Little Bees Auto Parts</title>
+  <meta name="description" content="Quality used auto parts. Fast, honest, nationwide shipping." />
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#111827;
+      --accent:#f4c430;
+      --accent2:#ffb703;
+      --text:#f9fafb;
+      --muted:#9ca3af;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(900px 500px at 15% -10%, #1f2937, transparent),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 32px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(11,15,20,.9);
+      backdrop-filter:blur(8px);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      letter-spacing:.5px;
+      font-size:1.15rem;
+    }
+
+    .bee{
+      width:38px;height:38px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      display:grid;place-items:center;
+      color:#000;font-weight:900;
+    }
+
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      margin-left:24px;
+      font-weight:700;
+    }
+
+    nav a:hover{color:var(--text)}
+
+    nav a.cta{
+      color:#000;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      padding:8px 14px;
+      border-radius:999px;
+    }
+
+    .hero{
+      max-width:1200px;
+      margin:auto;
+      padding:56px 32px 32px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:40px;
+    }
+
+    .hero h1{
+      font-size:clamp(2.2rem,4vw,3.2rem);
+      line-height:1.1;
+      margin-bottom:18px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:1.05rem;
+      max-width:520px;
+      margin-bottom:28px;
+    }
+
+    .cta{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:28px;
+    }
+
+    .btn{
+      padding:14px 22px;
+      border-radius:12px;
+      font-weight:900;
+      text-decoration:none;
+      border:1px solid transparent;
+      transition:.2s ease;
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#000;
+    }
+
+    .btn.secondary{
+      border-color:rgba(255,255,255,.18);
+      color:var(--text);
+    }
+
+    .btn.secondary:hover{
+      background:rgba(255,255,255,.06);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .stat{
+      background:#0f172a;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .stat h3{
+      color:var(--accent);
+      font-size:1.6rem;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .card{
+      background:#111827;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:26px;
+      box-shadow:0 30px 60px rgba(0,0,0,.55);
+    }
+
+    section.features{
+      max-width:1200px;
+      margin:24px auto 0;
+      padding:0 32px 72px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:24px;
+    }
+
+    .feature h4{margin-bottom:8px}
+    .feature p{color:var(--muted);font-size:.95rem}
+
+    /* MAP */
+    .map-section{
+      border-top:1px solid rgba(255,255,255,.08);
+      background:#0b0f14;
+      padding:32px;
+    }
+
+    .map-section h3{
+      margin-bottom:16px;
+      font-size:1.2rem;
+    }
+
+    .map-wrap{
+      width:100%;
+      height:360px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 30px 60px rgba(0,0,0,.6);
+    }
+
+    .map-wrap iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      filter:grayscale(100%) contrast(1.1) brightness(.9);
+    }
+
+    footer{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:32px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:16px;
+      background:#0b0f14;
+    }
+
+    footer span{
+      color:var(--muted);
+      font-size:.9rem;
+      max-width:360px;
+    }
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      nav{display:none}
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <div class="bee">🐝</div>
+    <span>Two Little Bees Auto Parts</span>
+  </div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#features">Why Us</a>
+    <a class="cta" href="https://twolittlebeesautoparts.github.io/">Enter Inventory</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <h1>Quality Used Auto Parts.<br>Fast. Honest. Nationwide.</h1>
+      <p>
+        Engines, transmissions, body parts, and more.
+        This page is the front door — our live inventory system is just one click away.
+      </p>
+
+      <div class="cta">
+        <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a>
+        <a class="btn secondary" href="#contact">Call for Parts</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <h3>10K+</h3>
+          <span>Parts Available</span>
+        </div>
+        <div class="stat">
+          <h3>1985–2025</h3>
+          <span>Vehicle Coverage</span>
+        </div>
+        <div class="stat">
+          <h3>Nationwide</h3>
+          <span>Shipping</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:14px">What We Sell</h3>
+      <ul style="line-height:1.9;color:var(--muted)">
+        <li>Engines & Transmissions</li>
+        <li>Suspension & Drivetrain</li>
+        <li>Body Panels & Interior</li>
+        <li>Electrical & Modules</li>
+        <li>OEM Used Auto Parts</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <div class="card feature">
+      <h4>Real Inventory</h4>
+      <p>Live stock tied directly to our internal system.</p>
+    </div>
+    <div class="card feature">
+      <h4>VIN-Verified</h4>
+      <p>Every part traced back to its source vehicle.</p>
+    </div>
+    <div class="card feature">
+      <h4>Fast Quotes</h4>
+      <p>Call, click, or search — we move quick.</p>
+    </div>
+    <div class="card feature">
+      <h4>Built to Scale</h4>
+      <p>This page can sit in front of any app or platform.</p>
+    </div>
+  </section>
+</main>
+
+<!-- MAP -->
+<section class="map-section">
+  <h3>📍 Visit Us</h3>
+  <div class="map-wrap">
+    <iframe
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=507+S+Tibbs+Ave+Indianapolis+IN&output=embed">
+    </iframe>
+  </div>
+</section>
+
+<footer id="contact">
+  <span>© 2026 Two Little Bees Auto Parts</span>
+  <span>
+    📞 <a href="tel:3172437777" style="color:var(--accent);font-weight:800;text-decoration:none">(317) 243-7777</a><br>
+    📍 <a href="https://www.google.com/maps/search/?api=1&query=507+S+Tibbs+Ave" target="_blank" style="color:var(--accent);font-weight:800;text-decoration:none">507 S Tibbs Ave</a>
+  </span>
+  <span>
+    🕒 <strong style="color:var(--text)">Hours</strong><br>
+    Mon–Fri: 9–5<br>
+    Sat: 9–4<br>
+    Sun: Closed
+  </span>
+</footer>
+
+<a href="tel:3172437777"
+   style="position:fixed;bottom:20px;right:20px;
+   background:linear-gradient(135deg,#f4c430,#ffb703);
+   color:#000;padding:16px 20px;border-radius:999px;
+   font-weight:900;text-decoration:none;
+   box-shadow:0 20px 40px rgba(0,0,0,.6);z-index:999">
+  📞 Call Now
+</a>
+
+</body>
+</html>
