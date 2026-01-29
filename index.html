@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
 <title>Two Little Bees Auto Parts.</title>
 
 <style>
@@ -16,6 +18,19 @@
   --muted:#9ca3af;
 }
 
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+body{
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
@@ -26,7 +41,7 @@ body{
   color:var(--text);
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 header{
   position:sticky;
   top:0;
@@ -56,10 +71,7 @@ header{
 
 .logo img{height:34px}
 
-nav{
-  display:flex;
-  gap:6px;
-}
+nav{display:flex;gap:6px}
 
 nav a{
   text-decoration:none;
@@ -77,12 +89,9 @@ nav a.cta{
   border:none;
 }
 
-nav a.vin-btn{
-  background:#0f172a;
-  color:#fff;
-}
+nav a.vin-btn{background:#0f172a;color:#fff}
 
-/* ================= HERO ================= */
+/* HERO */
 .hero{
   max-width:1200px;
   margin:auto;
@@ -92,21 +101,9 @@ nav a.vin-btn{
   gap:28px;
 }
 
-.hero h1{
-  font-size:clamp(1.8rem,4vw,2.8rem);
-}
-
-.trust{
-  color:var(--accent);
-  font-weight:800;
-  margin:14px 0;
-}
-
-.hero p{
-  color:var(--muted);
-  max-width:520px;
-  margin-bottom:22px;
-}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem)}
+.trust{color:var(--accent);font-weight:800;margin:14px 0}
+.hero p{color:var(--muted);max-width:520px;margin-bottom:22px}
 
 .btn{
   display:inline-block;
@@ -116,18 +113,10 @@ nav a.vin-btn{
   text-decoration:none;
 }
 
-.btn.primary{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
-}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000}
+.btn.secondary{border:1px solid rgba(255,255,255,.2);color:var(--text);margin-left:10px}
 
-.btn.secondary{
-  border:1px solid rgba(255,255,255,.2);
-  color:var(--text);
-  margin-left:10px;
-}
-
-/* ================= STATS ================= */
+/* STATS */
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -146,7 +135,7 @@ nav a.vin-btn{
 .stat h3{color:var(--accent)}
 .stat span{color:var(--muted);font-size:.85rem}
 
-/* ================= CARD ================= */
+/* CARD */
 .card{
   background:var(--panel);
   border:1px solid rgba(255,255,255,.18);
@@ -176,17 +165,13 @@ nav a.vin-btn{
 }
 
 .sell-item span{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
+  width:20px;height:20px;border-radius:50%;
+  display:grid;place-items:center;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
-  font-size:.7rem;
+  color:#000;font-size:.7rem;
 }
 
-/* ================= FOOTER ================= */
+/* FOOTER */
 footer{
   border-top:1px solid rgba(255,255,255,.08);
   padding:22px 16px;
@@ -194,18 +179,13 @@ footer{
   gap:14px;
 }
 
-footer span{
-  color:var(--muted);
-  font-size:.9rem;
-}
+footer span{color:var(--muted);font-size:.9rem}
 
-/* ================= VIN PANEL ================= */
+/* VIN PANEL */
 #vin-panel{
   position:fixed;
-  left:18px;
-  bottom:18px;
-  width:340px;
-  max-height:80vh;
+  left:18px;bottom:18px;
+  width:340px;max-height:80vh;
   background:#0b1210;
   border-radius:18px;
   padding:14px;
@@ -215,81 +195,57 @@ footer span{
 }
 
 #vin-panel input{
-  width:100%;
-  padding:10px;
+  width:100%;padding:10px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.15);
-  background:#0c1612;
-  color:#fff;
+  background:#0c1612;color:#fff;
   text-transform:uppercase;
 }
 
 #vin-panel button{
-  width:100%;
-  margin-top:8px;
-  padding:10px;
-  border-radius:12px;
-  border:none;
-  font-weight:900;
+  width:100%;margin-top:8px;
+  padding:10px;border-radius:12px;
+  border:none;font-weight:900;
 }
 
 .primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000}
 .secondary{background:#1a1a1a;color:#fff}
 
 .row{
-  display:flex;
-  justify-content:space-between;
+  display:flex;justify-content:space-between;
   background:#0f1714;
-  padding:8px 10px;
-  border-radius:10px;
-  margin-top:6px;
-  font-size:12px;
+  padding:8px 10px;border-radius:10px;
+  margin-top:6px;font-size:12px;
 }
 
 .k{color:#9bb0a6}
 .v{font-weight:800}
 .vehicle{text-align:center;font-weight:900;margin-top:8px}
 
-/* ================= MOBILE FIXES ================= */
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr}
-}
-
+/* MOBILE */
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
 @media(max-width:600px){
-  .stats{grid-template-columns:1fr}
-  .sell-grid{grid-template-columns:1fr}
-  .btn.secondary{margin-left:0;margin-top:10px;display:block}
-
-  #vin-panel{
-    left:0;right:0;bottom:0;
-    width:100%;
-    border-radius:18px 18px 0 0;
-  }
+  .stats,.sell-grid{grid-template-columns:1fr}
+  .btn.secondary{margin:10px 0 0;display:block}
+  #vin-panel{left:0;right:0;bottom:0;width:100%;border-radius:18px 18px 0 0}
 }
 
-/* ================= PRINT ================= */
+/* PRINT */
 #print-sheet{display:none}
-
 @media print{
   body{visibility:hidden}
   #print-sheet,#print-sheet *{visibility:visible}
   #print-sheet{
-    display:block;
-    position:absolute;
-    top:0;left:0;
-    width:100%;
-    padding:20px;
-    background:#fff;
-    color:#000;
+    display:block;position:absolute;
+    top:0;left:0;width:100%;
+    padding:20px;background:#fff;color:#000;
   }
 }
 
-/* ================= ADMIN (NEW, ISOLATED) ================= */
 .admin-only{display:none}
 .admin-edit[contenteditable="true"]{
   outline:2px dashed var(--accent);
-  padding:8px;
-  border-radius:10px;
+  padding:8px;border-radius:10px;
 }
 </style>
 </head>
@@ -302,7 +258,6 @@ footer span{
     <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true">
     <span>Two Little Bees Auto Parts</span>
   </div>
-
   <nav>
     <a href="#">Home</a>
     <a class="cta" href="https://twolittlebeesautoparts.github.io/">Inventory</a>
@@ -312,6 +267,7 @@ footer span{
 </header>
 
 <main>
+
 <section class="hero">
   <div>
     <h1>The Right Parts<br>Every Time<br>Built on Trust</h1>
@@ -341,47 +297,36 @@ footer span{
   </div>
 </section>
 
-<!-- ================= ABOUT US (NEW) ================= -->
 <section style="max-width:1200px;margin:auto;padding:24px 16px">
   <div class="card">
-    <div style="display:flex;align-items:center;gap:12px">
-      <img id="aboutLogo" style="height:48px">
-      <input type="file" class="admin-only" onchange="uploadLogo(this,'aboutLogo')">
-      <h3>About Us</h3>
-    </div>
+    <h3>About Us</h3>
     <div id="aboutText" class="admin-edit">
-      Two Little Bees Auto Parts is a family-owned auto recycler based in Indianapolis,
-      providing VIN-verified OEM parts with fast nationwide shipping.
+      Two Little Bees Auto Parts is a locally owned auto parts business based in Indianapolis, focused on providing quality OEM used parts pulled from real vehicles.
+
+We specialize in VIN-verified parts, making sure every engine, transmission, module, or body component is correctly matched before it ever leaves our yard. That means fewer mistakes, no guesswork, and confidence that the part you’re buying is the right one.
+
+Serving local repair shops, dealerships, and walk-in customers, we cover vehicles from 1985–2025 and maintain live inventory tied directly to the cars we dismantle. Our team is hands-on, fast-moving, and easy to reach — when you call, you talk to someone who knows parts.
+
+Built in Indianapolis and grounded in trust, we do business the right way:
+accurate parts, straight answers, and no wasted time.
     </div>
   </div>
 </section>
 
-<!-- ================= GALLERY (NEW) ================= -->
 <section style="max-width:1200px;margin:auto;padding:0 16px 40px">
   <div class="card">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-      <img id="galleryLogo" style="height:48px">
-      <input type="file" class="admin-only" onchange="uploadLogo(this,'galleryLogo')">
-      <h3>Gallery</h3>
-    </div>
-
-    <div id="galleryGrid" style="
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-      gap:12px"></div>
-
-    <input type="file" multiple class="admin-only" onchange="addGalleryImages(this)" style="margin-top:12px">
+    <h3>Gallery Coming Soon!</h3>
+    <div id="galleryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
   </div>
 </section>
+
 </main>
 
 <footer>
   <span>© 2026 Two Little Bees Auto Parts</span>
-  <span>📞 (317) 243-7777<br>📍 507 S Tibbs Ave, Indianapolis</span>
-  <span>Mon–Fri 9–5<br>Sat 9–4</span>
+  <span>📞 (317) 243-7777<br>📍 Indianapolis</span>
 </footer>
 
-<!-- VIN PANEL (UNCHANGED) -->
 <div id="vin-panel">
   <strong>Two Little Bees Auto Parts</strong><br>
   (317) 243-7777 • Indianapolis
@@ -401,15 +346,7 @@ footer span{
   <div id="print-results"></div>
 </div>
 
-<button onclick="adminLogin()" style="
-  position:fixed;bottom:16px;right:16px;
-  padding:10px 16px;border-radius:999px;
-  border:none;background:var(--accent);
-  color:#000;font-weight:900;z-index:999">
-Admin</button>
-
 <script>
-/* VIN LOGIC (UNCHANGED) */
 const vinPanel=document.getElementById("vin-panel");
 const vinInput=document.getElementById("vin");
 const resultsEl=document.getElementById("results");
@@ -421,28 +358,19 @@ function toggleVin(){
 
 function row(k,v){
   if(!v)return;
-  resultsEl.innerHTML+=`
-    <div class="row">
-      <div class="k">${k}</div>
-      <div class="v">${v}</div>
-    </div>`;
+  resultsEl.innerHTML+=`<div class="row"><div class="k">${k}</div><div class="v">${v}</div></div>`;
 }
 
 async function decode(){
   const v=vinInput.value.toUpperCase();
   if(v.length!==17)return;
-
   resultsEl.innerHTML="";
   const r=await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`);
   const d=(await r.json()).Results[0];
-
   vehicleEl.textContent=`${d.ModelYear} ${d.Make} ${d.Model}`;
-
   row("Engine",d.DisplacementL?`${d.DisplacementL}L`:"");
-  row("Cylinders",d.EngineCylinders);
   row("Transmission",d.TransmissionStyle);
   row("Drive",d.DriveType);
-  row("Fuel",d.FuelTypePrimary);
 }
 
 function printSheet(){
@@ -450,61 +378,6 @@ function printSheet(){
   document.getElementById("print-results").innerHTML=resultsEl.innerHTML;
   window.print();
 }
-
-/* ADMIN + ABOUT + GALLERY (NEW, ISOLATED) */
-const ADMIN_PASS="admin123";
-
-function adminLogin(){
-  if(prompt("Admin password")===ADMIN_PASS){
-    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
-    document.getElementById("aboutText").contentEditable=true;
-  }
-}
-
-const aboutText=document.getElementById("aboutText");
-aboutText.innerHTML=localStorage.aboutText||aboutText.innerHTML;
-aboutText.oninput=()=>localStorage.aboutText=aboutText.innerHTML;
-
-function uploadLogo(input,id){
-  const r=new FileReader();
-  r.onload=()=>{
-    localStorage[id]=r.result;
-    document.getElementById(id).src=r.result;
-  }
-  r.readAsDataURL(input.files[0]);
-}
-["aboutLogo","galleryLogo"].forEach(id=>{
-  if(localStorage[id])document.getElementById(id).src=localStorage[id];
-});
-
-const galleryGrid=document.getElementById("galleryGrid");
-
-function loadGallery(){
-  galleryGrid.innerHTML="";
-  (JSON.parse(localStorage.gallery||"[]")).forEach(src=>{
-    const img=document.createElement("img");
-    img.src=src;
-    img.style.width="100%";
-    img.style.height="140px";
-    img.style.objectFit="cover";
-    img.style.borderRadius="12px";
-    galleryGrid.appendChild(img);
-  });
-}
-
-function addGalleryImages(input){
-  const imgs=JSON.parse(localStorage.gallery||"[]");
-  [...input.files].forEach(f=>{
-    const r=new FileReader();
-    r.onload=()=>{
-      imgs.push(r.result);
-      localStorage.gallery=JSON.stringify(imgs);
-      loadGallery();
-    }
-    r.readAsDataURL(f);
-  });
-}
-loadGallery();
 </script>
 
 </body>
