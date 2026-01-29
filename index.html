@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Two Little Bees Auto Parts</title>
-<meta name="description" content="Quality used auto parts. Fast, honest, nationwide shipping." />
 
 <style>
 :root{
@@ -42,99 +41,46 @@ header{
   z-index:10;
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-weight:900;
-  letter-spacing:.5px;
-}
-
+.logo{display:flex;align-items:center;gap:12px;font-weight:900}
 .bee{
-  width:38px;height:38px;
-  border-radius:50%;
+  width:38px;height:38px;border-radius:50%;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:grid;place-items:center;
-  color:#000;font-weight:900;
+  display:grid;place-items:center;color:#000;
 }
 
-nav a{
-  color:var(--muted);
-  text-decoration:none;
-  margin-left:24px;
-  font-weight:700;
-}
-
+nav a{color:var(--muted);text-decoration:none;margin-left:24px;font-weight:700}
 nav a.cta{
-  color:#000;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  padding:8px 14px;
-  border-radius:999px;
+  color:#000;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  padding:8px 14px;border-radius:999px;
 }
 
 /* HERO */
 .hero{
-  max-width:1200px;
-  margin:auto;
-  padding:56px 32px;
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:40px;
+  max-width:1200px;margin:auto;padding:56px 32px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:40px;
 }
 
-.hero h1{
-  font-size:clamp(2.2rem,4vw,3.2rem);
-  line-height:1.1;
-  margin-bottom:12px;
-}
+.hero h1{font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.1}
+.trust{color:var(--accent);font-weight:800;margin:16px 0}
+.hero p{color:var(--muted);max-width:520px;margin-bottom:28px}
 
-.trust{
-  color:var(--accent);
-  font-weight:800;
-  margin-bottom:16px;
-}
-
-.hero p{
-  color:var(--muted);
-  max-width:520px;
-  margin-bottom:28px;
-}
-
-.btn{
-  padding:14px 22px;
-  border-radius:12px;
-  font-weight:900;
-  text-decoration:none;
-  display:inline-block;
-}
-
+.btn{padding:14px 22px;border-radius:12px;font-weight:900;text-decoration:none}
 .btn.primary{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#000;
 }
-
 .btn.secondary{
   border:1px solid rgba(255,255,255,.2);
-  color:var(--text);
-  margin-left:12px;
+  color:var(--text);margin-left:12px;
 }
 
 /* STATS */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-  margin-top:30px;
-}
-
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
 .stat{
   background:var(--panel-soft);
   border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  padding:16px;
-  text-align:center;
+  border-radius:14px;padding:16px;text-align:center;
 }
-
 .stat h3{color:var(--accent)}
 .stat span{color:var(--muted);font-size:.9rem}
 
@@ -147,90 +93,112 @@ nav a.cta{
   box-shadow:0 30px 60px rgba(0,0,0,.55);
 }
 
-/* WHAT WE SELL */
-.sell-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:18px;
-}
-
+.sell-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .sell-item{
-  display:flex;
-  gap:12px;
-  align-items:center;
+  display:flex;gap:12px;align-items:center;
   background:var(--panel-soft);
   border:1px solid rgba(255,255,255,.12);
-  border-radius:12px;
-  padding:14px;
-  color:var(--muted);
-  font-weight:700;
+  border-radius:12px;padding:14px;
+  color:var(--muted);font-weight:700;
 }
-
 .sell-item span{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
-  width:22px;height:22px;
-  border-radius:50%;
-  display:grid;place-items:center;
-  font-size:.75rem;
-  font-weight:900;
-}
-
-/* FLOATING BUTTONS */
-.fab{
-  position:fixed;
-  right:18px;
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  color:#000;
-  font-size:26px;
-  font-weight:900;
-  text-decoration:none;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:0 20px 40px rgba(0,0,0,.6);
-  z-index:999;
-}
-
-/* PHONE PULSE */
-.call-btn{
-  bottom:96px;
-  animation:pulse 1.8s infinite;
-}
-
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(244,196,48,.6)}
-  70%{box-shadow:0 0 0 18px rgba(244,196,48,0)}
-  100%{box-shadow:0 0 0 0 rgba(244,196,48,0)}
-}
-
-/* GPS BUTTON */
-.gps-btn{
-  bottom:18px;
+  color:#000;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;font-size:.75rem;font-weight:900;
 }
 
 /* FOOTER */
 footer{
   border-top:1px solid rgba(255,255,255,.08);
-  padding:32px;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:16px;
+  padding:32px;display:flex;flex-wrap:wrap;
+  justify-content:space-between;gap:16px;
+}
+footer span{color:var(--muted);font-size:.9rem}
+
+/* FLOATING ACTIONS */
+.fab{
+  position:fixed;right:18px;width:64px;height:64px;
+  border-radius:50%;display:grid;place-items:center;
+  font-size:26px;color:#000;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  z-index:999;
+}
+.call-btn{bottom:96px}
+.gps-btn{bottom:18px}
+
+/* ===== GOLD VIN BUTTON ===== */
+#vin-toggle{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;
+  font-weight:900;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  z-index:998;
 }
 
-footer span{
-  color:var(--muted);
-  font-size:.9rem;
+/* VIN PANEL */
+#vin-panel{
+  position:fixed;
+  left:18px;
+  bottom:96px;
+  width:340px;
+  max-height:80vh;
+  background:#0b1210;
+  border-radius:18px;
+  padding:14px;
+  color:#e9fff4;
+  display:none;
+  box-shadow:0 30px 60px rgba(0,0,0,.7);
+  z-index:998;
+  
 }
 
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr}
-  nav{display:none}
-  .sell-grid{grid-template-columns:1fr}
+#vin-panel input{
+  width:100%;padding:10px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#0c1612;color:#fff;text-transform:uppercase;
+}
+
+#vin-panel button{
+  width:100%;margin-top:8px;padding:10px;
+  border-radius:12px;border:0;font-weight:900;
+}
+
+.primary{
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  color:#000;
+}
+
+.secondary{background:#1a1a1a;color:#fff}
+
+.row{
+  display:flex;justify-content:space-between;
+  background:#0f1714;padding:8px 10px;
+  border-radius:10px;margin-top:6px;font-size:12px;
+}
+.k{color:#9bb0a6}
+.v{font-weight:800}
+.vehicle{text-align:center;font-weight:900;margin-top:8px}
+
+/* ===== PRINT VIN SHEET ===== */
+@media print{
+  body *{display:none!important}
+  #vin-panel,#vin-panel *{display:block!important}
+  #vin-panel{
+    position:static;width:100%;
+    background:#fff;color:#000;
+    box-shadow:none;
+  }
+  .row{background:#f3f4f6}
 }
 </style>
 </head>
@@ -244,7 +212,6 @@ footer span{
   </div>
   <nav>
     <a href="#">Home</a>
-    <a href="#features">Why Us</a>
     <a class="cta" href="https://twolittlebeesautoparts.github.io/">Enter Inventory</a>
   </nav>
 </header>
@@ -282,22 +249,109 @@ footer span{
 
 <footer>
   <span>© 2026 Two Little Bees Auto Parts</span>
-  <span>
-    📞 <a href="tel:3172437777" style="color:var(--accent);font-weight:800;text-decoration:none">(317) 243-7777</a><br>
-    📍 507 S Tibbs Ave, Indianapolis
-  </span>
-  <span>
-    Mon–Fri: 9–5<br>Sat: 9–4<br>Sun: Closed
-  </span>
+  <span>📞 (317) 243-7777<br>📍 507 S Tibbs Ave, Indianapolis</span>
+  <span>Mon–Fri 9–5<br>Sat 9–4</span>
 </footer>
 
-<!-- FLOATING CALL -->
 <a href="tel:3172437777" class="fab call-btn">📞</a>
+<a href="https://www.google.com/maps/search/?api=1&query=507+S+Tibbs+Ave+Indianapolis+IN" target="_blank" class="fab gps-btn">📍</a>
 
-<!-- FLOATING GPS -->
-<a href="https://www.google.com/maps/search/?api=1&query=507+S+Tibbs+Ave+Indianapolis+IN"
-   target="_blank"
-   class="fab gps-btn">📍</a>
+<div id="vin-toggle" onclick="toggleVin()">VIN</div>
 
+<div id="vin-panel">
+  <strong>Two Little Bees Auto Parts</strong><br>
+  (317) 243-7777 • Indianapolis
+  <input id="vin" maxlength="17" placeholder="ENTER VIN">
+  <button class="primary" onclick="decode()">Decode VIN</button>
+  <button class="secondary" onclick="window.print()">Print VIN Sheet</button>
+  <div id="vehicle" class="vehicle"></div>
+  <div id="results"></div>
+</div>
+
+<script>
+const vinInput   = document.getElementById("vin");
+const resultsEl  = document.getElementById("results");
+const vehicleEl  = document.getElementById("vehicle");
+const vinPanel   = document.getElementById("vin-panel");
+
+function toggleVin(){
+  vinPanel.style.display =
+    vinPanel.style.display === "block" ? "none" : "block";
+}
+
+function clean(v){
+  return v.toUpperCase().replace(/[^A-Z0-9]/g,"");
+}
+
+function valid(v){
+  return v.length === 17 && !/[IOQ]/.test(v);
+}
+
+function section(title){
+  resultsEl.innerHTML += `<div class="section">${title}</div>`;
+}
+
+function row(k,v){
+  if(!v || v==="Not Applicable") return;
+  resultsEl.innerHTML +=
+    `<div class="row">
+      <div class="k">${k}</div>
+      <div class="v">${v}</div>
+    </div>`;
+}
+
+async function decode(){
+  let v = clean(vinInput.value);
+  vinInput.value = v;
+  if(!valid(v)) return;
+
+  resultsEl.innerHTML = "";
+
+  const r = await fetch(
+    `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`
+  );
+  const d = (await r.json()).Results[0];
+
+  vehicleEl.textContent = `${d.ModelYear} ${d.Make} ${d.Model}`;
+
+  // ===== VEHICLE =====
+  section("Vehicle");
+  row("Make", d.Make);
+  row("Model", d.Model);
+  row("Year", d.ModelYear);
+  row("Trim", d.Trim);
+  row("Series", d.Series);
+  row("Body Style", d.BodyClass);
+  row("Doors", d.Doors);
+  row("Vehicle Type", d.VehicleType);
+  row("GVWR", d.GVWR);
+
+  // ===== ENGINE & DRIVETRAIN =====
+  section("Engine & Drivetrain");
+  row("Engine Size", d.DisplacementL ? `${d.DisplacementL} L` : "");
+  row("Cylinders", d.EngineCylinders);
+  row("Configuration", d.EngineConfiguration);
+  row("Horsepower", d.EngineHP ? `${d.EngineHP} HP` : "");
+  row("Fuel Type", d.FuelTypePrimary);
+  row("Transmission", d.TransmissionStyle);
+  row("Drive", d.DriveType);
+
+  // ===== MANUFACTURING =====
+  section("Manufacturing");
+  row("Manufacturer", d.Manufacturer);
+  row("Plant City", d.PlantCity);
+  row("Plant State", d.PlantState);
+  row("Plant Country", d.PlantCountry);
+
+  // ===== SAFETY =====
+  section("Safety");
+  row("ABS", d.ABS);
+  row("Traction Control", d.TractionControl);
+  row("ESC", d.ESC);
+  row("Front Airbags", d.AirBagLocFront);
+  row("Side Airbags", d.AirBagLocSide);
+  row("Curtain Airbags", d.AirBagLocCurtain);
+}
+</script>
 </body>
 </html>
