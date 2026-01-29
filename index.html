@@ -96,7 +96,6 @@ nav a.vin-btn{
   font-size:clamp(1.8rem,4vw,2.8rem);
 }
 
-
 .trust{
   color:var(--accent);
   font-weight:800;
@@ -253,9 +252,7 @@ footer span{
 
 /* ================= MOBILE FIXES ================= */
 @media(max-width:900px){
-  .hero{
-    grid-template-columns:1fr;
-  }
+  .hero{grid-template-columns:1fr}
 }
 
 @media(max-width:600px){
@@ -264,9 +261,7 @@ footer span{
   .btn.secondary{margin-left:0;margin-top:10px;display:block}
 
   #vin-panel{
-    left:0;
-    right:0;
-    bottom:0;
+    left:0;right:0;bottom:0;
     width:100%;
     border-radius:18px 18px 0 0;
   }
@@ -281,13 +276,20 @@ footer span{
   #print-sheet{
     display:block;
     position:absolute;
-    top:0;
-    left:0;
+    top:0;left:0;
     width:100%;
     padding:20px;
     background:#fff;
     color:#000;
   }
+}
+
+/* ================= ADMIN (NEW, ISOLATED) ================= */
+.admin-only{display:none}
+.admin-edit[contenteditable="true"]{
+  outline:2px dashed var(--accent);
+  padding:8px;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -295,7 +297,7 @@ footer span{
 <body>
 
 <header>
-  <div class="header-inner">
+<div class="header-inner">
   <div class="logo">
     <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true">
     <span>Two Little Bees Auto Parts</span>
@@ -307,7 +309,6 @@ footer span{
     <a href="javascript:void(0)" class="vin-btn" onclick="toggleVin()">VIN</a>
   </nav>
 </div>
-
 </header>
 
 <main>
@@ -339,6 +340,39 @@ footer span{
     </div>
   </div>
 </section>
+
+<!-- ================= ABOUT US (NEW) ================= -->
+<section style="max-width:1200px;margin:auto;padding:24px 16px">
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img id="aboutLogo" style="height:48px">
+      <input type="file" class="admin-only" onchange="uploadLogo(this,'aboutLogo')">
+      <h3>About Us</h3>
+    </div>
+    <div id="aboutText" class="admin-edit">
+      Two Little Bees Auto Parts is a family-owned auto recycler based in Indianapolis,
+      providing VIN-verified OEM parts with fast nationwide shipping.
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY (NEW) ================= -->
+<section style="max-width:1200px;margin:auto;padding:0 16px 40px">
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <img id="galleryLogo" style="height:48px">
+      <input type="file" class="admin-only" onchange="uploadLogo(this,'galleryLogo')">
+      <h3>Gallery</h3>
+    </div>
+
+    <div id="galleryGrid" style="
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+      gap:12px"></div>
+
+    <input type="file" multiple class="admin-only" onchange="addGalleryImages(this)" style="margin-top:12px">
+  </div>
+</section>
 </main>
 
 <footer>
@@ -347,7 +381,7 @@ footer span{
   <span>Mon–Fri 9–5<br>Sat 9–4</span>
 </footer>
 
-<!-- VIN PANEL -->
+<!-- VIN PANEL (UNCHANGED) -->
 <div id="vin-panel">
   <strong>Two Little Bees Auto Parts</strong><br>
   (317) 243-7777 • Indianapolis
@@ -367,7 +401,15 @@ footer span{
   <div id="print-results"></div>
 </div>
 
+<button onclick="adminLogin()" style="
+  position:fixed;bottom:16px;right:16px;
+  padding:10px 16px;border-radius:999px;
+  border:none;background:var(--accent);
+  color:#000;font-weight:900;z-index:999">
+Admin</button>
+
 <script>
+/* VIN LOGIC (UNCHANGED) */
 const vinPanel=document.getElementById("vin-panel");
 const vinInput=document.getElementById("vin");
 const resultsEl=document.getElementById("results");
@@ -408,6 +450,61 @@ function printSheet(){
   document.getElementById("print-results").innerHTML=resultsEl.innerHTML;
   window.print();
 }
+
+/* ADMIN + ABOUT + GALLERY (NEW, ISOLATED) */
+const ADMIN_PASS="admin123";
+
+function adminLogin(){
+  if(prompt("Admin password")===ADMIN_PASS){
+    document.querySelectorAll(".admin-only").forEach(e=>e.style.display="block");
+    document.getElementById("aboutText").contentEditable=true;
+  }
+}
+
+const aboutText=document.getElementById("aboutText");
+aboutText.innerHTML=localStorage.aboutText||aboutText.innerHTML;
+aboutText.oninput=()=>localStorage.aboutText=aboutText.innerHTML;
+
+function uploadLogo(input,id){
+  const r=new FileReader();
+  r.onload=()=>{
+    localStorage[id]=r.result;
+    document.getElementById(id).src=r.result;
+  }
+  r.readAsDataURL(input.files[0]);
+}
+["aboutLogo","galleryLogo"].forEach(id=>{
+  if(localStorage[id])document.getElementById(id).src=localStorage[id];
+});
+
+const galleryGrid=document.getElementById("galleryGrid");
+
+function loadGallery(){
+  galleryGrid.innerHTML="";
+  (JSON.parse(localStorage.gallery||"[]")).forEach(src=>{
+    const img=document.createElement("img");
+    img.src=src;
+    img.style.width="100%";
+    img.style.height="140px";
+    img.style.objectFit="cover";
+    img.style.borderRadius="12px";
+    galleryGrid.appendChild(img);
+  });
+}
+
+function addGalleryImages(input){
+  const imgs=JSON.parse(localStorage.gallery||"[]");
+  [...input.files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      imgs.push(r.result);
+      localStorage.gallery=JSON.stringify(imgs);
+      loadGallery();
+    }
+    r.readAsDataURL(f);
+  });
+}
+loadGallery();
 </script>
 
 </body>
