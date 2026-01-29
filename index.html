@@ -40,21 +40,22 @@ header{
 .header-inner{
   max-width:1200px;
   margin:auto;
-  padding:12px 20px;
+  padding:14px 20px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:14px;
+  gap:16px;
+  flex-wrap:wrap;
 }
 
 .logo{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   font-weight:900;
 }
 
-.logo img{height:36px}
+.logo img{height:40px}
 
 nav{
   display:flex;
@@ -68,8 +69,8 @@ nav a{
   padding:6px 12px;
   border-radius:999px;
   color:var(--muted);
-  border:1px solid rgba(255,255,255,.14);
-  font-size:13px;
+  border:1px solid rgba(255,255,255,.12);
+  font-size:.85rem;
 }
 
 nav a.cta{
@@ -79,7 +80,7 @@ nav a.cta{
 }
 
 nav a.vin-btn{
-  background:#1a1a1a;
+  background:#0f172a;
   color:#fff;
 }
 
@@ -203,30 +204,11 @@ footer span{
   font-size:.9rem;
 }
 
-/* ================= FLOATING BUTTONS ================= */
-.fab{
-  position:fixed;
-  right:18px;
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:26px;
-  color:#000;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:0 20px 40px rgba(0,0,0,.6);
-  z-index:999;
-}
-
-.call-btn{bottom:96px}
-.gps-btn{bottom:18px}
-
 /* ================= VIN ================= */
 #vin-panel{
   position:fixed;
-  right:18px;
-  bottom:96px;
+  left:18px;
+  bottom:18px;
   width:340px;
   max-height:80vh;
   background:#0b1210;
@@ -273,10 +255,26 @@ footer span{
 .v{font-weight:800}
 .vehicle{text-align:center;font-weight:900;margin-top:8px}
 
-/* ================= MOBILE ================= */
-@media(max-width:768px){
-  .hero{grid-template-columns:1fr}
-  .stats{grid-template-columns:1fr}
+/* ================= PRINT SHEET (LOGO ONLY) ================= */
+#print-sheet{
+  display:none;
+}
+
+@media print{
+  body{visibility:hidden}
+  #print-sheet, #print-sheet *{visibility:visible}
+  #print-sheet{
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    padding:20px;
+    background:#fff;
+    color:#000;
+    font-family:Arial, sans-serif;
+  }
+  .row{background:#f3f4f6}
 }
 </style>
 </head>
@@ -300,7 +298,7 @@ footer span{
 <main>
 <section class="hero">
   <div>
-    <h1>Parts.<br>Fast. Honest.<br>Friendly.</h1>
+    <h1>The Right Parts<br>Every Time<br>Built on Trust</h1>
     <div class="trust">📍 Established in Indianapolis</div>
     <p>Live inventory tied to real vehicles. Call or search — we move fast.</p>
 
@@ -334,45 +332,49 @@ footer span{
   <span>Mon–Fri 9–5<br>Sat 9–4</span>
 </footer>
 
-<a href="tel:3172437777" class="fab call-btn">📞</a>
-<a href="https://www.google.com/maps/search/?api=1&query=507+S+Tibbs+Ave+Indianapolis+IN" target="_blank" class="fab gps-btn">📍</a>
-
+<!-- VIN PANEL -->
 <div id="vin-panel">
   <strong>Two Little Bees Auto Parts</strong><br>
   (317) 243-7777 • Indianapolis
   <input id="vin" maxlength="17" placeholder="ENTER VIN">
   <button class="primary" onclick="decode()">Decode VIN</button>
-  <button class="secondary" onclick="window.print()">Print VIN Sheet</button>
+  <button class="secondary" onclick="printSheet()">Print VIN Sheet</button>
   <div id="vehicle" class="vehicle"></div>
   <div id="results"></div>
 </div>
 
+<!-- PRINT ONLY -->
+<div id="print-sheet">
+  <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true" style="height:60px">
+  <h2>Two Little Bees Auto Parts</h2>
+  <p>(317) 243-7777 • Indianapolis</p>
+  <hr>
+  <div id="print-vehicle"></div>
+  <div id="print-results"></div>
+</div>
+
 <script>
+const vinPanel=document.getElementById("vin-panel");
 const vinInput=document.getElementById("vin");
 const resultsEl=document.getElementById("results");
 const vehicleEl=document.getElementById("vehicle");
-const vinPanel=document.getElementById("vin-panel");
 
 function toggleVin(){
   vinPanel.style.display=vinPanel.style.display==="block"?"none":"block";
 }
 
-function clean(v){return v.toUpperCase().replace(/[^A-Z0-9]/g,"")}
-function valid(v){return v.length===17&&!/[IOQ]/.test(v)}
-
 function row(k,v){
-  if(!v||v==="Not Applicable")return;
+  if(!v)return;
   resultsEl.innerHTML+=`
-  <div class="row">
-    <div class="k">${k}</div>
-    <div class="v">${v}</div>
-  </div>`;
+    <div class="row">
+      <div class="k">${k}</div>
+      <div class="v">${v}</div>
+    </div>`;
 }
 
 async function decode(){
-  let v=clean(vinInput.value);
-  vinInput.value=v;
-  if(!valid(v))return;
+  const v=vinInput.value.toUpperCase();
+  if(v.length!==17)return;
 
   resultsEl.innerHTML="";
   const r=await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`);
@@ -385,6 +387,12 @@ async function decode(){
   row("Transmission",d.TransmissionStyle);
   row("Drive",d.DriveType);
   row("Fuel",d.FuelTypePrimary);
+}
+
+function printSheet(){
+  document.getElementById("print-vehicle").innerText=vehicleEl.innerText;
+  document.getElementById("print-results").innerHTML=resultsEl.innerHTML;
+  window.print();
 }
 </script>
 
