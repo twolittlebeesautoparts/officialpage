@@ -405,38 +405,102 @@ accurate parts, straight answers, and no wasted time.
 </div>
 
 <script>
-const vinPanel=document.getElementById("vin-panel");
-const vinInput=document.getElementById("vin");
-const resultsEl=document.getElementById("results");
-const vehicleEl=document.getElementById("vehicle");
+/* ======================
+   VIN PANEL LOGIC
+====================== */
+const vinPanel = document.getElementById("vin-panel");
+const vinInput = document.getElementById("vin");
+const resultsEl = document.getElementById("results");
+const vehicleEl = document.getElementById("vehicle");
 
 function toggleVin(){
-  vinPanel.style.display=vinPanel.style.display==="block"?"none":"block";
+  vinPanel.style.display =
+    vinPanel.style.display === "block" ? "none" : "block";
 }
 
-function row(k,v){
-  if(!v)return;
-  resultsEl.innerHTML+=`<div class="row"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+function row(k, v){
+  if(!v) return;
+  resultsEl.innerHTML += `
+    <div class="row">
+      <div class="k">${k}</div>
+      <div class="v">${v}</div>
+    </div>`;
 }
 
 async function decode(){
-  const v=vinInput.value.toUpperCase();
-  if(v.length!==17)return;
-  resultsEl.innerHTML="";
-  const r=await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`);
-  const d=(await r.json()).Results[0];
-  vehicleEl.textContent=`${d.ModelYear} ${d.Make} ${d.Model}`;
-  row("Engine",d.DisplacementL?`${d.DisplacementL}L`:"");
-  row("Transmission",d.TransmissionStyle);
-  row("Drive",d.DriveType);
+  const v = vinInput.value.toUpperCase();
+  if(v.length !== 17) return;
+
+  resultsEl.innerHTML = "";
+  vehicleEl.textContent = "Decoding...";
+
+  const r = await fetch(
+    `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`
+  );
+  const d = (await r.json()).Results[0];
+
+  vehicleEl.textContent = `${d.ModelYear} ${d.Make} ${d.Model}`;
+  row("Engine", d.DisplacementL ? `${d.DisplacementL}L` : "");
+  row("Transmission", d.TransmissionStyle);
+  row("Drive", d.DriveType);
 }
 
 function printSheet(){
-  document.getElementById("print-vehicle").innerText=vehicleEl.innerText;
-  document.getElementById("print-results").innerHTML=resultsEl.innerHTML;
+  document.getElementById("print-vehicle").innerText = vehicleEl.innerText;
+  document.getElementById("print-results").innerHTML = resultsEl.innerHTML;
   window.print();
 }
+
+/* ======================
+   ADMIN EDIT MODE
+====================== */
+let admin = false;
+const adminBtn = document.getElementById("adminToggle");
+const editable = document.querySelectorAll(".admin-edit");
+
+/* SECRET TOGGLE: Ctrl + Shift + A */
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a"){
+    admin = !admin;
+
+    adminBtn.style.display = admin ? "block" : "none";
+
+    editable.forEach(el => {
+      el.contentEditable = admin;
+      el.style.cursor = admin ? "text" : "default";
+    });
+
+    alert(admin ? "Admin Edit Mode ON" : "Admin Edit Mode OFF");
+  }
+});
+
+/* LOAD + SAVE CONTENT */
+editable.forEach(el => {
+  const saved = localStorage.getItem(el.id);
+  if(saved) el.innerHTML = saved;
+
+  el.addEventListener("blur", () => {
+    if(admin){
+      localStorage.setItem(el.id, el.innerHTML);
+    }
+  });
+});
 </script>
 
+<button id="adminToggle" style="
+  position:fixed;
+  bottom:16px;
+  right:16px;
+  z-index:999;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+  border:none;
+  background:#f4c430;
+  color:#000;
+  display:none;
+">
+  ADMIN
+</button>
 </body>
 </html>
