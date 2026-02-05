@@ -194,9 +194,9 @@ main{display:block}
 .card{
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel);
   border:1px solid rgba(255,255,255,.14);
-  border-radius:var(--radius);
+  border-radius:18px;
   padding:20px;
-  box-shadow:var(--shadow);
+  box-shadow:0 30px 60px rgba(0,0,0,.55);
 }
 
 .card h3{
@@ -695,7 +695,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
         <small id="galleryHint">Firestore Gallery (free)</small>
       </div>
 
-      <!-- Admin bar -->
       <div id="adminBar">
         <div class="left">
           <button class="btn secondary" id="adminLoginOpen" type="button">Admin Login</button>
@@ -733,10 +732,8 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   </div>
 </footer>
 
-<!-- Backdrop for VIN panel -->
 <div id="vin-panel-backdrop" onclick="toggleVin()"></div>
 
-<!-- VIN bottom sheet -->
 <div id="vin-panel" role="dialog" aria-modal="true" aria-label="VIN Decoder">
   <div id="vin-head">
     <strong>VIN Decoder</strong>
@@ -759,10 +756,8 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div id="results"></div>
 </div>
 
-<!-- Print sheet (only used for printing, does not display on page) -->
 <div id="print-sheet" style="display:none"></div>
 
-<!-- Admin Login Modal -->
 <div id="adminModalBackdrop"></div>
 <div id="adminModal" role="dialog" aria-modal="true" aria-label="Admin Login">
   <div class="modalHead">
@@ -790,7 +785,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   </div>
 </div>
 
-<!-- Add Photo Modal -->
 <div id="addModalBackdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:2100"></div>
 <div id="addModal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 24px));background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.7);padding:16px;z-index:2101">
   <div class="modalHead">
@@ -819,10 +813,9 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 
 <script>
 /* ======================
-   YOUR EXISTING VIN + LOCAL EDIT MODE
+   VIN + LOCAL EDIT MODE
 ====================== */
 
-/* ===== VIN PANEL STATE ===== */
 const vinPanel = document.getElementById("vin-panel");
 const vinBackdrop = document.getElementById("vin-panel-backdrop");
 const vinInput = document.getElementById("vin");
@@ -1017,7 +1010,7 @@ function printSheet(){
   location.reload();
 }
 
-/* ===== LOCAL ADMIN EDIT MODE (localStorage only) ===== */
+/* Local admin edit mode (localStorage only) */
 let admin = false;
 const adminBtn = document.getElementById("adminToggle");
 const editable = document.querySelectorAll(".admin-edit");
@@ -1048,7 +1041,6 @@ editable.forEach(el=>{
 });
 </script>
 
-<!-- Your existing admin toggle pill -->
 <button id="adminToggle" style="
   position:fixed;
   bottom:16px;
@@ -1063,9 +1055,7 @@ editable.forEach(el=>{
   display:none;
   box-shadow:0 18px 35px rgba(0,0,0,.4);
   cursor:pointer;
-">
-  ADMIN
-</button>
+">ADMIN</button>
 
 <!-- Firebase Firestore Gallery (FREE: links stored in Firestore) -->
 <script type="module">
@@ -1073,12 +1063,12 @@ editable.forEach(el=>{
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
   import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  // ✅ YOUR REAL CONFIG (from your Firebase console)
+  // ✅ MATCHES YOUR FIREBASE CONSOLE
   const firebaseConfig = {
     apiKey: "AIzaSyCsgPuGyKnzoZtjBofZ_wdApnr4bVjpio",
     authDomain: "twolittlebeeshomepage.firebaseapp.com",
     projectId: "twolittlebeeshomepage",
-    storageBucket: "twolittlebeeshomepage.firebasestorage.app",
+    storageBucket: "twolittlebeeshomepage.appspot.com", /* ✅ FIXED */
     messagingSenderId: "671040515864",
     appId: "1:671040515864:web:15b5b12775bb950709786d",
     measurementId: "G-362YBE5VQL"
@@ -1088,7 +1078,6 @@ editable.forEach(el=>{
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // UI
   const galleryGrid = document.getElementById("galleryGrid");
   const galleryLoading = document.getElementById("galleryLoading");
 
@@ -1100,7 +1089,6 @@ editable.forEach(el=>{
   const authText = document.getElementById("authText");
   const galleryHint = document.getElementById("galleryHint");
 
-  // Login modal
   const adminModalBackdrop = document.getElementById("adminModalBackdrop");
   const adminModal = document.getElementById("adminModal");
   const adminModalClose = document.getElementById("adminModalClose");
@@ -1110,7 +1098,6 @@ editable.forEach(el=>{
   const adminPass = document.getElementById("adminPass");
   const adminMsg = document.getElementById("adminMsg");
 
-  // Add modal
   const addModalBackdrop = document.getElementById("addModalBackdrop");
   const addModal = document.getElementById("addModal");
   const addModalClose = document.getElementById("addModalClose");
@@ -1208,7 +1195,6 @@ editable.forEach(el=>{
     img.src = data.url;
     img.alt = data.caption || "Gallery photo";
     img.loading = "lazy";
-
     wrap.appendChild(img);
 
     if(data.caption){
@@ -1240,7 +1226,10 @@ editable.forEach(el=>{
 
   function isLikelyImageUrl(u){
     const s = (u || "").toLowerCase();
-    return s.startsWith("http") && (s.includes("googleusercontent") || s.match(/\.(jpg|jpeg|png|webp|gif)(\?|#|$)/));
+    return s.startsWith("http") && (
+      s.includes("googleusercontent") ||
+      s.match(/\.(jpg|jpeg|png|webp|gif)(\?|#|$)/)
+    );
   }
 
   async function addPhoto(){
@@ -1252,7 +1241,6 @@ editable.forEach(el=>{
       return;
     }
 
-    // Soft warning, still allow.
     if(!isLikelyImageUrl(url)){
       addMsg.textContent = "That link might not be a direct image. If it doesn’t load, use a direct image URL.";
     } else {
@@ -1261,11 +1249,7 @@ editable.forEach(el=>{
 
     addDo.disabled = true;
     try{
-      await addDoc(galleryCol, {
-        url,
-        caption,
-        createdAt: serverTimestamp()
-      });
+      await addDoc(galleryCol, { url, caption, createdAt: serverTimestamp() });
       photoUrl.value = "";
       photoCaption.value = "";
       closeAddModal();
@@ -1278,7 +1262,6 @@ editable.forEach(el=>{
 
   addDo.addEventListener("click", addPhoto);
 
-  // Live gallery
   const q = query(galleryCol, orderBy("createdAt", "desc"));
   let currentUser = null;
 
@@ -1294,11 +1277,10 @@ editable.forEach(el=>{
       if(!item.url) continue;
       addImgCard(item, isAdmin);
     }
-  }, (err)=>{
+  }, ()=>{
     if(galleryLoading) galleryLoading.textContent = "Gallery not loaded (check Firestore rules).";
   });
 
-  // Auth state
   onAuthStateChanged(auth, (user)=>{
     currentUser = user || null;
     const signedIn = !!user;
@@ -1313,7 +1295,6 @@ editable.forEach(el=>{
     galleryHint.textContent = signedIn ? "Admin can add/delete" : "Public view";
   });
 
-  // Remove the loading tile once JS runs
   if(galleryLoading) galleryLoading.remove();
 </script>
 
