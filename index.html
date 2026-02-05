@@ -290,6 +290,7 @@ main{display:block}
   justify-content:center;
   color:var(--muted);
   font-weight:900;
+  position:relative;
 }
 .galleryItem img{
   width:100%;
@@ -297,6 +298,63 @@ main{display:block}
   object-fit:cover;
   display:block;
 }
+.galleryItem .cap{
+  position:absolute;
+  left:10px; right:10px; bottom:10px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.14);
+  padding:8px 10px;
+  border-radius:12px;
+  color:#fff;
+  font-size:.78rem;
+  font-weight:900;
+  display:none;
+}
+.galleryItem:hover .cap{display:block}
+.galleryItem .del{
+  position:absolute;
+  top:10px; right:10px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  border-radius:12px;
+  padding:8px 10px;
+  font-weight:950;
+  cursor:pointer;
+  display:none;
+}
+.galleryItem.admin .del{display:block}
+
+/* Admin bar */
+#adminBar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+#adminBar .left{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(15,23,42,.55);
+  color:var(--text);
+  font-weight:900;
+  font-size:.85rem;
+}
+.pill .tinyDot{
+  width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.25);
+  box-shadow:0 0 0 3px rgba(255,255,255,.08);
+}
+.pill.ok .tinyDot{background:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.pill.bad .tinyDot{background:var(--bad);box-shadow:0 0 0 3px rgba(239,68,68,.18)}
 
 /* Footer */
 footer{
@@ -479,7 +537,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   position:fixed;
   left:50%; top:50%;
   transform:translate(-50%,-50%);
-  width:min(420px, calc(100% - 24px));
+  width:min(460px, calc(100% - 24px));
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel);
   border:1px solid rgba(255,255,255,.14);
   border-radius:18px;
@@ -502,9 +560,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   font-weight:950;
   cursor:pointer;
 }
-.field{
-  margin-top:10px;
-}
+.field{margin-top:10px;}
 .field label{
   display:block;
   font-size:.85rem;
@@ -521,11 +577,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   color:#fff;
   font-weight:800;
 }
-.modalActions{
-  display:flex;
-  gap:10px;
-  margin-top:12px;
-}
+.modalActions{display:flex;gap:10px;margin-top:12px;}
 .modalActions button{flex:1}
 .helper{
   margin-top:10px;
@@ -533,40 +585,9 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   font-size:.85rem;
   line-height:1.35;
 }
-#adminBar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:12px;
-}
-#adminBar .left{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-}
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(15,23,42,.55);
-  color:var(--text);
-  font-weight:900;
-  font-size:.85rem;
-}
-.pill .tinyDot{
-  width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.25);
-  box-shadow:0 0 0 3px rgba(255,255,255,.08);
-}
-.pill.ok .tinyDot{background:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.18)}
-.pill.bad .tinyDot{background:var(--bad);box-shadow:0 0 0 3px rgba(239,68,68,.18)}
 
 /* Mobile */
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr}
-}
+@media(max-width:900px){ .hero{grid-template-columns:1fr} }
 @media(max-width:600px){
   .stats,.sell-grid{grid-template-columns:1fr}
   nav{
@@ -576,7 +597,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
     padding-top:8px;
   }
   nav a{flex-shrink:0}
-
   #vin-panel{
     left:0; right:0;
     bottom:env(safe-area-inset-bottom);
@@ -586,42 +606,10 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
     border-radius:18px 18px 0 0;
   }
 }
-
-/* ================================
-   PRINT SHEET (LOGO + VIN RESULTS)
-   ================================ */
-
-/* ✅ FIX: hard-hide print sheet on screen so it never shows as a giant logo */
-#print-sheet{display:none !important;}
-
-@media print{
-  body *{visibility:hidden}
-  #print-sheet, #print-sheet *{visibility:visible}
-  #print-sheet{
-    display:block !important;
-    position:absolute;
-    top:0; left:0;
-    width:100%;
-    padding:20px;
-    background:#fff;
-    color:#000;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  }
-  #print-sheet img{height:60px}
-  #print-sheet h2{margin:10px 0 6px}
-  #print-results .row{
-    background:#fff;
-    border:1px solid #ddd;
-    margin-top:8px;
-  }
-  #print-results .k{color:#333}
-  #print-results .v{color:#000}
-}
 </style>
 </head>
 
 <body>
-
 <div class="toast" id="toast">Copied</div>
 
 <header>
@@ -641,7 +629,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 </header>
 
 <main id="top">
-
   <section class="hero">
     <div>
       <h1>The Right Parts.<br>Every Time.<br>Built on Trust.</h1>
@@ -652,9 +639,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
         <div class="badge"><span class="dot"></span> Fast Counter Support</div>
       </div>
 
-      <p>
-        Live inventory tied to real vehicles. Call or search — we move fast, verify fitment, and keep it simple.
-      </p>
+      <p>Live inventory tied to real vehicles. Call or search — we move fast, verify fitment, and keep it simple.</p>
 
       <div class="btns">
         <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a>
@@ -707,7 +692,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
     <div class="card">
       <div class="sectionTitleRow">
         <h3>Gallery</h3>
-        <small id="galleryHint">Firebase Gallery</small>
+        <small id="galleryHint">Firestore Gallery (free)</small>
       </div>
 
       <!-- Admin bar -->
@@ -715,11 +700,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
         <div class="left">
           <button class="btn secondary" id="adminLoginOpen" type="button">Admin Login</button>
           <button class="btn secondary" id="adminLogout" type="button" style="display:none">Logout</button>
-
-          <label class="btn primary" id="uploadWrap" style="display:none; cursor:pointer;">
-            Upload Photos
-            <input id="galleryUpload" type="file" accept="image/*" multiple style="display:none">
-          </label>
+          <button class="btn primary" id="addPhotoOpen" type="button" style="display:none">Add Photo</button>
         </div>
 
         <div class="pill bad" id="authPill">
@@ -733,7 +714,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
       </div>
     </div>
   </section>
-
 </main>
 
 <footer>
@@ -779,16 +759,8 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div id="results"></div>
 </div>
 
-<!-- Print sheet -->
-<div id="print-sheet">
-  <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true" alt="Two Little Bees">
-  <h2>TWO LITTLE BEES AUTO PARTS</h2>
-  <p>(317) 243-7777 • Indianapolis</p>
-  <p style="margin-top:6px">507 S Tibbs Ave, Indianapolis, IN</p>
-  <hr style="margin:12px 0">
-  <div id="print-vehicle" style="font-weight:900"></div>
-  <div id="print-results"></div>
-</div>
+<!-- Print sheet (only used for printing, does not display on page) -->
+<div id="print-sheet" style="display:none"></div>
 
 <!-- Admin Login Modal -->
 <div id="adminModalBackdrop"></div>
@@ -800,12 +772,12 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 
   <div class="field">
     <label for="adminEmail">Email</label>
-    <input id="adminEmail" type="email" placeholder="admin@twolittlebees.com" autocomplete="username">
+    <input id="adminEmail" type="email" placeholder="your admin email" autocomplete="username">
   </div>
 
   <div class="field">
     <label for="adminPass">Password</label>
-    <input id="adminPass" type="password" placeholder="(6+ characters)" autocomplete="current-password">
+    <input id="adminPass" type="password" placeholder="your password" autocomplete="current-password">
   </div>
 
   <div class="modalActions">
@@ -814,13 +786,40 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   </div>
 
   <div class="helper" id="adminMsg">
-    Tip: Firebase won’t allow a 4-digit password. Use something like <b>152000</b>.
+    Sign in using your Firebase user (Authentication → Users).
+  </div>
+</div>
+
+<!-- Add Photo Modal -->
+<div id="addModalBackdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:2100"></div>
+<div id="addModal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 24px));background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.7);padding:16px;z-index:2101">
+  <div class="modalHead">
+    <strong>Add Gallery Photo</strong>
+    <button class="iconBtn" id="addModalClose" type="button">Close</button>
+  </div>
+
+  <div class="field">
+    <label for="photoUrl">Photo URL (public link)</label>
+    <input id="photoUrl" type="url" placeholder="https://..." autocomplete="off">
+  </div>
+  <div class="field">
+    <label for="photoCaption">Caption (optional)</label>
+    <input id="photoCaption" type="text" placeholder="Engine arrivals, shop, yard, etc." autocomplete="off">
+  </div>
+
+  <div class="modalActions">
+    <button class="btn secondary" id="addCancel" type="button">Cancel</button>
+    <button class="btn primary" id="addDo" type="button">Add</button>
+  </div>
+
+  <div class="helper" id="addMsg">
+    Tip: Google Drive must be shared as “Anyone with link can view” and use a direct viewable link.
   </div>
 </div>
 
 <script>
 /* ======================
-   YOUR EXISTING VIN + ADMIN EDIT MODE (UNCHANGED)
+   YOUR EXISTING VIN + LOCAL EDIT MODE
 ====================== */
 
 /* ===== VIN PANEL STATE ===== */
@@ -864,13 +863,8 @@ document.addEventListener("keydown", (e)=>{
   }
 });
 
-/* ===== VIN HELPERS ===== */
-function cleanVIN(v){
-  return (v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-}
-function validVIN(v){
-  return v.length === 17 && !/[IOQ]/.test(v);
-}
+function cleanVIN(v){ return (v||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+function validVIN(v){ return v.length === 17 && !/[IOQ]/.test(v); }
 
 vinInput.addEventListener("input", ()=>{
   const c = cleanVIN(vinInput.value);
@@ -881,13 +875,9 @@ vinInput.addEventListener("input", ()=>{
 });
 
 vinInput.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){
-    e.preventDefault();
-    decode();
-  }
+  if(e.key === "Enter"){ e.preventDefault(); decode(); }
 });
 
-/* ===== CORS SAFE FETCH ===== */
 async function fetchDecode(v){
   const direct = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${v}?format=json`;
   try{
@@ -901,7 +891,6 @@ async function fetchDecode(v){
   }
 }
 
-/* ===== UI ROW (tap to copy) ===== */
 function escapeHtml(str){
   return String(str).replace(/[&<>"']/g, (m)=>({
     "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
@@ -947,7 +936,6 @@ document.addEventListener("click", async (e)=>{
   }
 });
 
-/* ===== VIN DECODE ===== */
 async function decode(){
   let v = cleanVIN(vinInput.value);
   vinInput.value = v;
@@ -959,7 +947,6 @@ async function decode(){
   if(vinBusy) return;
   vinBusy = true;
 
-  // cache (60s)
   const now = Date.now();
   if(lastVinCache.vin === v && lastVinCache.d && (now - lastVinCache.ts) < 60_000){
     renderVin(lastVinCache.d, v);
@@ -975,16 +962,13 @@ async function decode(){
   try{
     const json = await fetchDecode(v);
     const d = json?.Results?.[0] || {};
-
     lastVinCache = { vin:v, d, ts:Date.now() };
     renderVin(d, v);
-
     setVinStatus("VIN decoded successfully.", "ok");
   }catch{
     vehicleEl.textContent = "Decode failed.";
     setVinStatus("Decode failed. Check internet and try again.", "bad");
   }
-
   vinBusy = false;
 }
 
@@ -1013,11 +997,24 @@ function renderVin(d, v){
   row("GVWR", d.GVWR);
 }
 
-/* ===== PRINT ===== */
 function printSheet(){
-  document.getElementById("print-vehicle").innerText = vehicleEl.innerText;
-  document.getElementById("print-results").innerHTML = resultsEl.innerHTML;
+  const ps = document.getElementById("print-sheet");
+  ps.innerHTML = `
+    <div style="background:#fff;color:#000;padding:20px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+      <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true" alt="Two Little Bees" style="height:60px">
+      <h2 style="margin:10px 0 6px">TWO LITTLE BEES AUTO PARTS</h2>
+      <p>(317) 243-7777 • Indianapolis</p>
+      <p style="margin-top:6px">507 S Tibbs Ave, Indianapolis, IN</p>
+      <hr style="margin:12px 0">
+      <div style="font-weight:900">${escapeHtml(vehicleEl.innerText)}</div>
+      <div>${resultsEl.innerHTML}</div>
+    </div>
+  `;
+  const prev = document.body.innerHTML;
+  const keep = ps.outerHTML;
+  document.body.innerHTML = keep;
   window.print();
+  location.reload();
 }
 
 /* ===== LOCAL ADMIN EDIT MODE (localStorage only) ===== */
@@ -1070,31 +1067,26 @@ editable.forEach(el=>{
   ADMIN
 </button>
 
-<!-- Firebase Gallery (module) -->
+<!-- Firebase Firestore Gallery (FREE: links stored in Firestore) -->
 <script type="module">
-  // Firebase v10 modular CDN
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  // ============================
-  // 1) PASTE YOUR FIREBASE CONFIG HERE
-  // Firebase Console -> Project settings -> Your apps -> Web app config
-  // ============================
+  // ✅ YOUR REAL CONFIG (from your Firebase console)
   const firebaseConfig = {
-    apiKey: "PASTE_YOURS",
-    authDomain: "PASTE_YOURS",
-    projectId: "PASTE_YOURS",
-    storageBucket: "PASTE_YOURS",
-    messagingSenderId: "PASTE_YOURS",
-    appId: "PASTE_YOURS"
+    apiKey: "AIzaSyCsgPuGyKnzoZtjBofZ_wdApnr4bVjpio",
+    authDomain: "twolittlebeeshomepage.firebaseapp.com",
+    projectId: "twolittlebeeshomepage",
+    storageBucket: "twolittlebeeshomepage.firebasestorage.app",
+    messagingSenderId: "671040515864",
+    appId: "1:671040515864:web:15b5b12775bb950709786d",
+    measurementId: "G-362YBE5VQL"
   };
-
-  const ADMIN_EMAIL_HINT = "admin@twolittlebees.com";
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const storage = getStorage(app);
+  const db = getFirestore(app);
 
   // UI
   const galleryGrid = document.getElementById("galleryGrid");
@@ -1102,13 +1094,13 @@ editable.forEach(el=>{
 
   const adminLoginOpen = document.getElementById("adminLoginOpen");
   const adminLogout = document.getElementById("adminLogout");
-  const uploadWrap = document.getElementById("uploadWrap");
-  const galleryUpload = document.getElementById("galleryUpload");
+  const addPhotoOpen = document.getElementById("addPhotoOpen");
 
   const authPill = document.getElementById("authPill");
   const authText = document.getElementById("authText");
   const galleryHint = document.getElementById("galleryHint");
 
+  // Login modal
   const adminModalBackdrop = document.getElementById("adminModalBackdrop");
   const adminModal = document.getElementById("adminModal");
   const adminModalClose = document.getElementById("adminModalClose");
@@ -1118,36 +1110,86 @@ editable.forEach(el=>{
   const adminPass = document.getElementById("adminPass");
   const adminMsg = document.getElementById("adminMsg");
 
-  adminEmail.placeholder = ADMIN_EMAIL_HINT;
+  // Add modal
+  const addModalBackdrop = document.getElementById("addModalBackdrop");
+  const addModal = document.getElementById("addModal");
+  const addModalClose = document.getElementById("addModalClose");
+  const addCancel = document.getElementById("addCancel");
+  const addDo = document.getElementById("addDo");
+  const photoUrl = document.getElementById("photoUrl");
+  const photoCaption = document.getElementById("photoCaption");
+  const addMsg = document.getElementById("addMsg");
 
-  function openModal(){
+  const galleryCol = collection(db, "gallery");
+
+  function openLoginModal(){
     adminModalBackdrop.style.display = "block";
     adminModal.style.display = "block";
-    adminMsg.textContent = "Sign in with your Firebase admin email/password.";
+    adminMsg.textContent = "Sign in with your Firebase user (Authentication → Users).";
     setTimeout(()=> adminEmail.focus(), 50);
     document.body.style.overflow = "hidden";
   }
-  function closeModal(){
+  function closeLoginModal(){
     adminModalBackdrop.style.display = "none";
     adminModal.style.display = "none";
     document.body.style.overflow = "";
   }
 
-  adminLoginOpen.addEventListener("click", openModal);
-  adminModalClose.addEventListener("click", closeModal);
-  adminCancel.addEventListener("click", closeModal);
-  adminModalBackdrop.addEventListener("click", closeModal);
+  function openAddModal(){
+    addModalBackdrop.style.display = "block";
+    addModal.style.display = "block";
+    addMsg.textContent = "Paste a public image URL. (Google Drive must be public.)";
+    setTimeout(()=> photoUrl.focus(), 50);
+    document.body.style.overflow = "hidden";
+  }
+  function closeAddModal(){
+    addModalBackdrop.style.display = "none";
+    addModal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  adminLoginOpen.addEventListener("click", openLoginModal);
+  adminModalClose.addEventListener("click", closeLoginModal);
+  adminCancel.addEventListener("click", closeLoginModal);
+  adminModalBackdrop.addEventListener("click", closeLoginModal);
+
+  addPhotoOpen.addEventListener("click", openAddModal);
+  addModalClose.addEventListener("click", closeAddModal);
+  addCancel.addEventListener("click", closeAddModal);
+  addModalBackdrop.addEventListener("click", closeAddModal);
+
   document.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape" && adminModal.style.display === "block") closeModal();
+    if(e.key === "Escape"){
+      if(adminModal.style.display === "block") closeLoginModal();
+      if(addModal.style.display === "block") closeAddModal();
+    }
   });
 
-  async function safeLoadGallery(){
+  async function doLogin(){
+    const email = (adminEmail.value || "").trim();
+    const pass = adminPass.value || "";
+    if(!email || !pass){
+      adminMsg.textContent = "Enter email and password.";
+      return;
+    }
+    adminLoginDo.disabled = true;
+    adminMsg.textContent = "Signing in…";
     try{
-      await loadGallery();
+      await signInWithEmailAndPassword(auth, email, pass);
+      closeLoginModal();
     }catch(e){
-      if(galleryLoading) galleryLoading.textContent = "Gallery not loaded (check Firebase config).";
+      adminMsg.textContent = "Login failed: " + (e?.message || e);
+    }finally{
+      adminLoginDo.disabled = false;
     }
   }
+
+  adminLoginDo.addEventListener("click", doLogin);
+  adminPass.addEventListener("keydown", (e)=>{ if(e.key === "Enter") doLogin(); });
+
+  adminLogout.addEventListener("click", async ()=>{
+    try{ await signOut(auth); }catch{}
+  });
 
   function makeEmpty(msg){
     galleryGrid.innerHTML = "";
@@ -1157,106 +1199,125 @@ editable.forEach(el=>{
     galleryGrid.appendChild(d);
   }
 
-  function addImg(url){
+  function addImgCard(data, isAdmin){
     const wrap = document.createElement("div");
-    wrap.className = "galleryItem";
+    wrap.className = "galleryItem" + (isAdmin ? " admin" : "");
     wrap.style.padding = "0";
+
     const img = document.createElement("img");
-    img.src = url;
-    img.alt = "Gallery photo";
+    img.src = data.url;
+    img.alt = data.caption || "Gallery photo";
+    img.loading = "lazy";
+
     wrap.appendChild(img);
+
+    if(data.caption){
+      const cap = document.createElement("div");
+      cap.className = "cap";
+      cap.textContent = data.caption;
+      wrap.appendChild(cap);
+    }
+
+    if(isAdmin && data.id){
+      const del = document.createElement("button");
+      del.className = "del";
+      del.type = "button";
+      del.textContent = "Delete";
+      del.addEventListener("click", async (e)=>{
+        e.stopPropagation();
+        if(!confirm("Delete this photo from Firestore?")) return;
+        try{
+          await deleteDoc(doc(db, "gallery", data.id));
+        }catch(err){
+          alert("Delete failed: " + (err?.message || err));
+        }
+      });
+      wrap.appendChild(del);
+    }
+
     galleryGrid.appendChild(wrap);
   }
 
-  async function loadGallery(){
-    const listRef = ref(storage, "gallery");
-    const res = await listAll(listRef);
+  function isLikelyImageUrl(u){
+    const s = (u || "").toLowerCase();
+    return s.startsWith("http") && (s.includes("googleusercontent") || s.match(/\.(jpg|jpeg|png|webp|gif)(\?|#|$)/));
+  }
 
-    const items = [...res.items].sort((a,b)=> (b.name || "").localeCompare(a.name || ""));
+  async function addPhoto(){
+    const url = (photoUrl.value || "").trim();
+    const caption = (photoCaption.value || "").trim();
 
-    if(items.length === 0){
+    if(!url){
+      addMsg.textContent = "Paste a photo URL first.";
+      return;
+    }
+
+    // Soft warning, still allow.
+    if(!isLikelyImageUrl(url)){
+      addMsg.textContent = "That link might not be a direct image. If it doesn’t load, use a direct image URL.";
+    } else {
+      addMsg.textContent = "Adding…";
+    }
+
+    addDo.disabled = true;
+    try{
+      await addDoc(galleryCol, {
+        url,
+        caption,
+        createdAt: serverTimestamp()
+      });
+      photoUrl.value = "";
+      photoCaption.value = "";
+      closeAddModal();
+    }catch(e){
+      addMsg.textContent = "Add failed: " + (e?.message || e);
+    }finally{
+      addDo.disabled = false;
+    }
+  }
+
+  addDo.addEventListener("click", addPhoto);
+
+  // Live gallery
+  const q = query(galleryCol, orderBy("createdAt", "desc"));
+  let currentUser = null;
+
+  onSnapshot(q, (snap)=>{
+    const docs = snap.docs.map(d=> ({ id:d.id, ...d.data() }));
+    if(!docs.length){
       makeEmpty("No photos yet.");
       return;
     }
-
     galleryGrid.innerHTML = "";
-    for(const item of items){
-      const url = await getDownloadURL(item);
-      addImg(url);
+    const isAdmin = !!currentUser;
+    for(const item of docs){
+      if(!item.url) continue;
+      addImgCard(item, isAdmin);
     }
-  }
-
-  async function doLogin(){
-    const email = (adminEmail.value || "").trim();
-    const pass = adminPass.value || "";
-
-    if(!email || !pass){
-      adminMsg.textContent = "Enter email and password.";
-      return;
-    }
-
-    adminLoginDo.disabled = true;
-    adminMsg.textContent = "Signing in…";
-    try{
-      await signInWithEmailAndPassword(auth, email, pass);
-      closeModal();
-    }catch(e){
-      adminMsg.textContent = "Login failed: " + (e?.message || e);
-    }finally{
-      adminLoginDo.disabled = false;
-    }
-  }
-
-  adminLoginDo.addEventListener("click", doLogin);
-  adminPass.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter") doLogin();
+  }, (err)=>{
+    if(galleryLoading) galleryLoading.textContent = "Gallery not loaded (check Firestore rules).";
   });
 
-  adminLogout.addEventListener("click", async ()=>{
-    try{ await signOut(auth); }catch{}
-  });
-
-  galleryUpload.addEventListener("change", async ()=>{
-    const files = [...(galleryUpload.files || [])];
-    if(!files.length) return;
-
-    uploadWrap.style.pointerEvents = "none";
-    uploadWrap.style.opacity = "0.75";
-
-    try{
-      for(const file of files){
-        const safeName = `${Date.now()}-${file.name}`.replace(/[^\w.\-]/g, "_");
-        const fileRef = ref(storage, `gallery/${safeName}`);
-        await uploadBytes(fileRef, file);
-      }
-      galleryUpload.value = "";
-      await loadGallery();
-      alert("Uploaded!");
-    }catch(e){
-      alert("Upload failed (admin-only): " + (e?.message || e));
-    }finally{
-      uploadWrap.style.pointerEvents = "";
-      uploadWrap.style.opacity = "";
-    }
-  });
-
+  // Auth state
   onAuthStateChanged(auth, (user)=>{
+    currentUser = user || null;
     const signedIn = !!user;
 
     adminLoginOpen.style.display = signedIn ? "none" : "inline-flex";
     adminLogout.style.display = signedIn ? "inline-flex" : "none";
-    uploadWrap.style.display = signedIn ? "inline-flex" : "none";
+    addPhotoOpen.style.display = signedIn ? "inline-flex" : "none";
 
     authPill.classList.remove("ok","bad");
     authPill.classList.add(signedIn ? "ok" : "bad");
     authText.textContent = signedIn ? `Signed in: ${user.email || "admin"}` : "Not signed in";
-
-    galleryHint.textContent = signedIn ? "Admin can upload" : "Public view";
+    galleryHint.textContent = signedIn ? "Admin can add/delete" : "Public view";
   });
 
-  safeLoadGallery();
+  // Remove the loading tile once JS runs
+  if(galleryLoading) galleryLoading.remove();
 </script>
 
 </body>
 </html>
+
 
