@@ -189,45 +189,81 @@ main{display:block}
   outline-offset:6px;border-radius:14px;padding:10px;
 }
 
-/* Gallery */
-#galleryGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+/* ====== Gallery (Horizontal Scroll) ====== */
+.galleryWrap{position:relative;margin-top:8px;}
+#galleryGrid{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  padding:8px 6px 12px;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+#galleryGrid::-webkit-scrollbar{display:none;}
+
 .galleryItem{
-  border-radius:16px;border:1px solid rgba(255,255,255,.12);
+  flex:0 0 auto;
+  width:220px;
+  aspect-ratio:3/4;
+  scroll-snap-align:start;
+
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
   background:rgba(15,23,42,.65);
-  overflow:hidden;min-height:120px;
+  overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   color:var(--muted);font-weight:900;position:relative;
+  box-shadow:0 16px 30px rgba(0,0,0,.35);
 }
 .galleryItem img{width:100%;height:100%;object-fit:cover;display:block;}
+.galleryItem::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.55) 100%);
+  pointer-events:none;
+}
 .galleryItem .cap{
   position:absolute;left:10px;right:10px;bottom:10px;
   background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.14);
   padding:8px 10px;border-radius:12px;
-  color:#fff;font-size:.78rem;font-weight:900;display:none;
+  color:#fff;font-size:.78rem;font-weight:900;
+  display:block;
+  z-index:2;
 }
-.galleryItem:hover .cap{display:block}
 .galleryItem .del{
   position:absolute;top:10px;right:10px;
   background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.18);
   color:#fff;border-radius:12px;padding:8px 10px;
   font-weight:950;cursor:pointer;display:none;
+  z-index:3;
 }
 .galleryItem.admin .del{display:block}
 
-#adminBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px;}
-#adminBar .left{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(15,23,42,.55);
-  color:var(--text);font-weight:900;font-size:.85rem;
+/* arrows */
+.galleryNav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  width:42px;height:42px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(11,15,20,.72);
+  backdrop-filter: blur(10px);
+  color:#fff;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
 }
-.pill .tinyDot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.25);box-shadow:0 0 0 3px rgba(255,255,255,.08);}
-.pill.ok .tinyDot{background:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.18)}
-.pill.bad .tinyDot{background:var(--bad);box-shadow:0 0 0 3px rgba(239,68,68,.18)}
+.galleryNav:active{transform:translateY(-50%) scale(.98)}
+.galleryNav.left{left:10px}
+.galleryNav.right{right:10px}
+.galleryNav[disabled]{opacity:.35;cursor:default;pointer-events:none}
 
 /* Footer */
 footer{
@@ -322,6 +358,8 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   nav{width:100%;justify-content:center;overflow-x:auto;padding-top:8px;}
   nav a{flex-shrink:0}
   #vin-panel{left:0; right:0; bottom:env(safe-area-inset-bottom); width:100%; max-height:78vh; transform:none; border-radius:18px 18px 0 0;}
+  .galleryItem{width:72vw; max-width:320px;}
+  .galleryNav{display:none;} /* mobile swipe is enough */
 }
 </style>
 </head>
@@ -425,8 +463,14 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
         </div>
       </div>
 
-      <div id="galleryGrid">
-        <div class="galleryItem" id="galleryLoading">Loading gallery…</div>
+      <!-- Horizontal carousel wrapper + arrows -->
+      <div class="galleryWrap">
+        <button class="galleryNav left" id="gPrev" type="button" aria-label="Scroll left">‹</button>
+        <button class="galleryNav right" id="gNext" type="button" aria-label="Scroll right">›</button>
+
+        <div id="galleryGrid">
+          <div class="galleryItem" id="galleryLoading">Loading gallery…</div>
+        </div>
       </div>
     </div>
   </section>
@@ -723,9 +767,6 @@ editable.forEach(el=>{
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
   import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  // IMPORTANT:
-  // This apiKey MUST be a key belonging to THIS firebase project.
-  // If your login still says "api-key-not-valid", the page is still loading an old index.html or your Auth authorized domains are missing.
   const firebaseConfig = {
     apiKey: "AIzaSyBbbBWg1x-RVuvfWfKBnOQPldMOWBLHXe8",
     authDomain: "twolittlebeeshomepage.firebaseapp.com",
@@ -742,6 +783,52 @@ editable.forEach(el=>{
 
   const galleryGrid = document.getElementById("galleryGrid");
   const galleryLoading = document.getElementById("galleryLoading");
+
+  const gPrev = document.getElementById("gPrev");
+  const gNext = document.getElementById("gNext");
+
+  // carousel controls + drag-scroll
+  function updateArrows(){
+    const max = galleryGrid.scrollWidth - galleryGrid.clientWidth;
+    if(max <= 1){
+      gPrev.disabled = true;
+      gNext.disabled = true;
+      return;
+    }
+    gPrev.disabled = galleryGrid.scrollLeft <= 2;
+    gNext.disabled = galleryGrid.scrollLeft >= (max - 2);
+  }
+
+  function scrollByCard(dir){
+    const card = galleryGrid.querySelector(".galleryItem");
+    const step = (card ? card.getBoundingClientRect().width : 240) + 14;
+    galleryGrid.scrollBy({ left: dir * step, behavior: "smooth" });
+  }
+
+  gPrev.addEventListener("click", ()=> scrollByCard(-1));
+  gNext.addEventListener("click", ()=> scrollByCard(1));
+  galleryGrid.addEventListener("scroll", ()=> requestAnimationFrame(updateArrows));
+
+  // mouse drag
+  let isDown=false, startX=0, startLeft=0;
+  galleryGrid.addEventListener("mousedown", (e)=>{
+    isDown = true;
+    startX = e.pageX;
+    startLeft = galleryGrid.scrollLeft;
+    galleryGrid.style.cursor = "grabbing";
+    galleryGrid.style.userSelect = "none";
+  });
+  window.addEventListener("mouseup", ()=>{
+    if(!isDown) return;
+    isDown = false;
+    galleryGrid.style.cursor = "";
+    galleryGrid.style.userSelect = "";
+  });
+  window.addEventListener("mousemove", (e)=>{
+    if(!isDown) return;
+    const dx = (e.pageX - startX);
+    galleryGrid.scrollLeft = startLeft - dx;
+  });
 
   const adminLoginOpen = document.getElementById("adminLoginOpen");
   const adminLogout = document.getElementById("adminLogout");
@@ -845,14 +932,8 @@ editable.forEach(el=>{
 
   function normalizeImgUrl(url){
     const u = (url || "").trim();
-    // allow direct images + googleusercontent + raw github images
     if(!u) return "";
-    try{
-      const parsed = new URL(u);
-      return parsed.toString();
-    }catch{
-      return "";
-    }
+    try{ return new URL(u).toString(); }catch{ return ""; }
   }
 
   async function addPhoto(){
@@ -878,7 +959,6 @@ editable.forEach(el=>{
       addDo.disabled = false;
     }
   }
-
   addDo.addEventListener("click", addPhoto);
 
   function makeEmpty(msg){
@@ -887,6 +967,7 @@ editable.forEach(el=>{
     d.className = "galleryItem";
     d.textContent = msg;
     galleryGrid.appendChild(d);
+    updateArrows();
   }
 
   function addImgCard(data, isAdmin){
@@ -942,6 +1023,7 @@ editable.forEach(el=>{
       if(!item.url) continue;
       addImgCard(item, isAdmin);
     }
+    requestAnimationFrame(updateArrows);
   }, (err)=>{
     console.error(err);
     if(galleryLoading) galleryLoading.textContent = "Gallery not loaded (check Firestore rules).";
@@ -959,9 +1041,13 @@ editable.forEach(el=>{
     authPill.classList.toggle("bad", !signedIn);
     authText.textContent = signedIn ? `Signed in: ${user.email || "admin"}` : "Not signed in";
     galleryHint.textContent = signedIn ? "Admin can add/delete" : "Public view";
+
+    // Re-render delete buttons state
+    requestAnimationFrame(updateArrows);
   });
 
   if(galleryLoading) galleryLoading.remove();
+  requestAnimationFrame(updateArrows);
 </script>
 
 </body>
