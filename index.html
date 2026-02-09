@@ -471,6 +471,10 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
     <nav>
       <a href="#top">Home</a>
       <a class="cta" href="https://twolittlebeesautoparts.github.io/OFFICIALPAGE/">Inventory</a>
+
+      <!-- ✅ NEW: Parts page link (relative, same repo folder) -->
+      <a href="parts.html">Car Parts</a>
+
       <a href="javascript:void(0)" class="vin-btn" onclick="toggleVin()">VIN</a>
     </nav>
   </div>
@@ -491,6 +495,10 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 
       <div class="btns">
         <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a>
+
+        <!-- ✅ NEW: Big button to parts.html -->
+        <a class="btn secondary" href="parts.html">🧰 Parts Inventory</a>
+
         <a class="btn secondary" href="tel:3172437777">Call (317) 243-7777</a>
         <a class="btn secondary" href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Get Directions</a>
       </div>
@@ -556,7 +564,6 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
         </div>
       </div>
 
-      <!-- UPGRADED WRAPPER + ARROWS -->
       <div class="galleryWrap">
         <button class="galleryNav left" id="gPrev" type="button" aria-label="Scroll left">‹</button>
         <button class="galleryNav right" id="gNext" type="button" aria-label="Scroll right">›</button>
@@ -581,6 +588,10 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 
   <div class="footerLinks">
     <a href="https://twolittlebeesautoparts.github.io/">Inventory</a>
+
+    <!-- ✅ NEW: Footer link to parts.html -->
+    <a href="parts.html">Car Parts</a>
+
     <a href="javascript:void(0)" onclick="toggleVin()">VIN Decoder</a>
     <a href="tel:3172437777">Call</a>
     <a href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Directions</a>
@@ -1040,7 +1051,6 @@ editable.forEach(el=>{
     updateArrows();
   }
 
-  // ===== Carousel arrows + drag scroll =====
   function updateArrows(){
     const max = galleryGrid.scrollWidth - galleryGrid.clientWidth;
     if(max <= 2){
@@ -1082,7 +1092,6 @@ editable.forEach(el=>{
     galleryGrid.scrollLeft = startLeft - dx;
   });
 
-  // ===== Lightbox (click image to open) =====
   const lbBackdrop = document.getElementById("lightboxBackdrop");
   const lbImg = document.getElementById("lbImg");
   const lbCap = document.getElementById("lbCap");
@@ -1138,7 +1147,6 @@ editable.forEach(el=>{
     if(e.key === "ArrowRight") nextLightbox();
   });
 
-  // Build cards
   function addImgCard(data, isAdmin, index){
     const wrap = document.createElement("div");
     wrap.className = "galleryItem" + (isAdmin ? " admin" : "");
@@ -1150,7 +1158,6 @@ editable.forEach(el=>{
     img.loading = "lazy";
     wrap.appendChild(img);
 
-    // click opens lightbox (but admin delete should not trigger it)
     wrap.addEventListener("click", (e)=>{
       const clickedDelete = e.target.closest(".del");
       if(clickedDelete) return;
@@ -1189,7 +1196,7 @@ editable.forEach(el=>{
 
   onSnapshot(q, (snap)=>{
     const items = snap.docs.map(d=> ({ id:d.id, ...d.data() })).filter(x=>x?.url);
-    lbItems = items.map(x=>({ url:x.url, caption:x.caption || "" })); // for lightbox
+    lbItems = items.map(x=>({ url:x.url, caption:x.caption || "" }));
 
     if(!items.length){
       makeEmpty("No photos yet.");
@@ -1231,4 +1238,3 @@ editable.forEach(el=>{
 
 </body>
 </html>
-
