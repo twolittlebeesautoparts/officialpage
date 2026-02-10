@@ -279,8 +279,10 @@
           <span id="adminText">Not signed in</span>
         </span>
 
-        <button class="btn" onclick="location.href='index.html'">⬅️ Landing</button>
-        <button class="btn" onclick="location.href='cars.html'">🚗 Cars</button>
+        <!-- ✅ NAV FIXED (no more 404 guessing) -->
+        <button class="btn" onclick="goLanding()">⬅️ Landing</button>
+        <button class="btn" onclick="goCars()">🚗 Cars</button>
+
         <button class="btn primary" id="adminBtn" style="display:none" onclick="openPartModal()">➕ Add Part</button>
         <button class="btn" id="loginBtn" onclick="openAuthModal()">🔐 Login</button>
         <button class="btn danger" id="logoutBtn" style="display:none" onclick="doLogout()">🚪 Logout</button>
@@ -544,7 +546,7 @@
 
 <script>
 /* =========================
-   0) CONFIG — FIXED (YOUR REAL ONE)
+   0) CONFIG — YOUR REAL ONE
 ========================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBVumo8QP3m18p33ugqx_eNADsjHG0gJS0",
@@ -563,9 +565,10 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+/* ✅ normalize admin emails to lowercase so matching is reliable */
 const ADMIN_EMAILS = [
   "josueblas971@gmail.com"
-];
+].map(e => String(e).toLowerCase());
 
 const partsCol = db.collection("parts");
 
@@ -600,6 +603,33 @@ function setAdminUI(){
   el("adminBtn").style.display = isAdmin ? "inline-flex" : "none";
   el("logoutBtn").style.display = auth.currentUser ? "inline-flex" : "none";
   el("loginBtn").style.display = auth.currentUser ? "none" : "inline-flex";
+}
+
+/* =========================
+   ✅ NAV FIX (GitHub Pages safe)
+========================= */
+function goLanding(){
+  // always go to the site root (works from /OFFICIALPAGE/* too)
+  window.location.href = window.location.origin + "/";
+}
+
+async function goCars(){
+  // tries common names in the SAME folder as this page
+  const candidates = ["cars.html", "car.html", "Cars.html", "CARS.html"];
+  const baseUrl = new URL(".", window.location.href);
+
+  for (const name of candidates){
+    const target = new URL(name, baseUrl).toString();
+    try{
+      const res = await fetch(target, { method: "HEAD", cache: "no-store" });
+      if (res.ok){
+        window.location.href = target;
+        return;
+      }
+    } catch (e) {}
+  }
+
+  toast("Cars page not found. Check filename/case in OFFICIALPAGE (cars.html / car.html).");
 }
 
 /* =========================
@@ -922,7 +952,8 @@ async function deleteCurrent(){
    8) AUTH STATE + BOOT
 ========================= */
 auth.onAuthStateChanged(async (user)=>{
-  isAdmin = !!(user && ADMIN_EMAILS.includes((user.email||"").toLowerCase()));
+  const email = (user?.email || "").toLowerCase();
+  isAdmin = !!(user && ADMIN_EMAILS.includes(email));
   setAdminUI();
   if(user && !isAdmin){
     toast("Signed in, but not an admin email.");
@@ -942,4 +973,3 @@ auth.onAuthStateChanged(async (user)=>{
 </script>
 </body>
 </html>
-
