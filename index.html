@@ -17,35 +17,36 @@
 :root{
   --bg:#0b0f14;
   --panel:#111827;
-  --panel-soft:#0f172a;
-  --accent:#f4c430;
-  --accent2:#ffb703;
+  --panel2:#0f172a;
+  --card:#0e1726;
+
   --text:#f9fafb;
   --muted:#9ca3af;
+
+  --accent:#f4c430;
+  --accent2:#ffb703;
+
   --border:rgba(255,255,255,.10);
   --border2:rgba(255,255,255,.14);
-  --shadow:0 30px 60px rgba(0,0,0,.55);
-  --radius:18px;
-  --radius2:14px;
+
   --ok:#22c55e;
   --bad:#ef4444;
   --warn:#f59e0b;
 
-  /* ✅ logo crop controls (fixes that “divider line / huge header” look) */
-  --logo-img-h:140px;      /* keeps your logo size */
-  --logo-box-h:128px;      /* header height stays small */
-  --logo-shift:10px;      /* crops extra transparent space inside PNG */
+  --shadow:0 30px 70px rgba(0,0,0,.55);
+  --radius:18px;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;max-width:100%;overflow-x:hidden}
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(900px 500px at 15% -10%, rgba(244,196,48,.14), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(255,183,3,.10), transparent 60%),
-    var(--bg);
   color:var(--text);
+  background:
+    radial-gradient(900px 520px at 12% -10%, rgba(244,196,48,.16), transparent 60%),
+    radial-gradient(900px 520px at 92% 14%, rgba(255,183,3,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.03), transparent 22%),
+    var(--bg);
   padding-left:env(safe-area-inset-left);
   padding-right:env(safe-area-inset-right);
   padding-top:env(safe-area-inset-top);
@@ -53,163 +54,225 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* ====== Header ====== */
+/* ============ Header ============ */
 header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:rgba(11,15,20,.90);
-  backdrop-filter:blur(10px);
+  position:sticky; top:0; z-index:100;
+  background:rgba(11,15,20,.86);
+  backdrop-filter: blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 .header-inner{
-  max-width:1200px;
-  margin:auto;
-  padding:2px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  flex-wrap:nowrap;
-}
-.logo{
-  display:flex;
-  align-items:center;
+  max-width:1200px; margin:0 auto;
+  padding:10px 16px;
+  display:flex; align-items:center; justify-content:space-between;
   gap:12px;
-  font-weight:950;
-  white-space:nowrap;
 }
 
-/* ✅ NEW: crop box so header isn’t tall, without shrinking logo */
+/* ✅ MODERN + NO CHOP LOGO (desktop + phones) */
+.brand{
+  display:flex; align-items:center; gap:12px;
+  min-width:0;
+}
 .logoMark{
-  height:var(--logo-box-h);
-  overflow:hidden;
+  height:54px;                 /* header height stays clean */
+  width:min(560px, 46vw);      /* responsive width */
   display:flex;
   align-items:center;
+  justify-content:flex-start;
+  overflow:visible;            /* ✅ prevents cropping */
 }
 .logoMark img{
-  height:var(--logo-img-h);
+  max-height:100%;
+  max-width:100%;
   width:auto;
+  height:auto;
   display:block;
   object-fit:contain;
+  object-position:center;
   background:transparent !important;
   border:none !important;
   border-radius:0 !important;
   box-shadow:none !important;
   filter: drop-shadow(0 14px 28px rgba(0,0,0,.28));
-  transform: translateY(var(--logo-shift));
 }
 
-.logo span{font-size:1rem;letter-spacing:.2px;}
-nav{display:flex;gap:8px;align-items:center}
+nav{
+  display:flex; align-items:center; gap:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none;}
 nav a{
   text-decoration:none;
   font-weight:900;
-  padding:8px 14px;
+  padding:10px 14px;
   border-radius:999px;
   color:var(--muted);
   border:1px solid rgba(255,255,255,.12);
-  font-size:.85rem;
+  background:rgba(255,255,255,.02);
+  font-size:.88rem;
+  white-space:nowrap;
   transition:transform .12s ease, filter .12s ease;
   user-select:none;
   -webkit-tap-highlight-color: transparent;
 }
-nav a:hover{filter:brightness(1.05)}
+nav a:hover{filter:brightness(1.06)}
 nav a:active{transform:scale(.99)}
-nav a.cta{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none}
-nav a.vin-btn{background:#0f172a;color:#fff}
+nav a.cta{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0b0f14;
+  border:none;
+}
+nav a.vin-btn{background:rgba(15,23,42,.65); color:#fff}
 
-/* ====== Main Layout ====== */
+/* ============ Layout ============ */
 main{display:block}
+.container{max-width:1200px; margin:0 auto; padding:0 16px;}
+
 .hero{
-  max-width:1200px;
-  margin:auto;
-  padding:44px 16px 22px;
+  padding:40px 0 18px;
   display:grid;
-  grid-template-columns:1.05fr .95fr;
-  gap:28px;
+  grid-template-columns: 1.06fr .94fr;
+  gap:22px;
   align-items:start;
 }
 .hero h1{
-  font-size:clamp(2.0rem,4.6vw,3.1rem);
-  line-height:1.05;
-  letter-spacing:-.6px;
+  font-size:clamp(2.0rem, 4.7vw, 3.2rem);
+  line-height:1.03;
+  letter-spacing:-.8px;
 }
 .hero p{
+  margin:14px 0 14px;
   color:var(--muted);
-  max-width:560px;
-  margin:14px 0 18px;
+  max-width:58ch;
+  line-height:1.55;
   font-size:1rem;
-  line-height:1.5;
-}
-.badges{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px;}
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(15,23,42,.55);
-  color:var(--text);font-weight:900;font-size:.85rem;
-}
-.badge .dot{
-  width:8px;height:8px;border-radius:999px;background:var(--accent);
-  box-shadow:0 0 0 3px rgba(244,196,48,.15);
 }
 
-.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.badges{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
+.badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(15,23,42,.50);
+  font-weight:900;
+  font-size:.86rem;
+}
+.badge .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 3px rgba(244,196,48,.16);
+}
+
+.btnRow{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:14px 18px;border-radius:14px;font-weight:950;text-decoration:none;
-  user-select:none;-webkit-tap-highlight-color: transparent;
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:14px 16px;
+  border-radius:14px;
+  font-weight:950;
+  text-decoration:none;
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
   transition:transform .12s ease, filter .12s ease;
 }
 .btn:active{transform:scale(.99)}
-.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none}
-.btn.secondary{border:1px solid rgba(255,255,255,.18);color:var(--text);background:rgba(0,0,0,.12)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0b0f14; border:none}
+.btn.secondary{background:rgba(255,255,255,.04); color:var(--text); border:1px solid rgba(255,255,255,.14)}
 
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--panel);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+    rgba(17,24,39,.72);
   border:1px solid rgba(255,255,255,.14);
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 30px 60px rgba(0,0,0,.55);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:18px;
 }
-.card h3{font-size:1.05rem;letter-spacing:.2px;}
-.sell-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
-.sell-item{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(15,23,42,.75);
+.card h3{font-size:1.05rem; letter-spacing:.2px;}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
+.pillItem{
+  display:flex; align-items:center; gap:10px;
+  padding:12px;
+  border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;padding:12px;
-  color:var(--muted);font-weight:850;font-size:.92rem;
+  background:rgba(15,23,42,.58);
+  color:var(--muted);
+  font-weight:900;
+  font-size:.93rem;
 }
-.sell-item span{
+.pillItem b{
   width:22px;height:22px;border-radius:50%;
   display:grid;place-items:center;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;font-size:.72rem;flex:0 0 auto;
+  color:#0b0f14;
+  font-size:.74rem;
+  flex:0 0 auto;
 }
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;}
-.stat{
-  background:rgba(15,23,42,.75);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;padding:14px;text-align:center;
-}
-.stat h3{color:var(--accent);font-size:1.2rem}
-.stat span{color:var(--muted);font-size:.86rem}
 
-.section{max-width:1200px;margin:auto;padding:22px 16px;}
-.section .card{padding:22px}
-.sectionTitleRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
-.sectionTitleRow small{color:var(--muted);font-weight:800}
+.stats{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.stat{
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(15,23,42,.52);
+  text-align:center;
+}
+.stat strong{display:block; color:var(--accent); font-size:1.18rem; font-weight:950}
+.stat span{display:block; margin-top:4px; color:var(--muted); font-size:.86rem; font-weight:850}
+
+.section{padding:18px 0;}
+.sectionTitleRow{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; margin-bottom:10px;
+}
+.sectionTitleRow small{color:var(--muted); font-weight:850}
 
 .admin-edit[contenteditable="true"]{
-  outline:2px dashed rgba(244,196,48,.75);
-  outline-offset:6px;border-radius:14px;padding:10px;
+  outline:2px dashed rgba(244,196,48,.78);
+  outline-offset:6px;
+  border-radius:14px;
+  padding:10px;
 }
 
-/* ====== GALLERY (UPGRADED: horizontal scroll carousel) ====== */
-.galleryWrap{position:relative;margin-top:8px;}
+/* ============ Admin Bar ============ */
+#adminBar{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+#adminBar .left{display:flex; gap:10px; flex-wrap:wrap}
+.pill{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.18);
+  font-weight:900;
+  font-size:.86rem;
+}
+.pill .tinyDot{
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(255,255,255,.18);
+  box-shadow:0 0 0 3px rgba(255,255,255,.06);
+}
+.pill.ok{border-color:rgba(34,197,94,.35)}
+.pill.ok .tinyDot{background:var(--ok); box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.pill.bad{border-color:rgba(239,68,68,.30)}
+.pill.bad .tinyDot{background:var(--bad); box-shadow:0 0 0 3px rgba(239,68,68,.18)}
 
+/* ============ Gallery (Carousel) ============ */
+.galleryWrap{position:relative; margin-top:10px;}
 #galleryGrid{
   display:flex;
   gap:14px;
@@ -221,7 +284,6 @@ main{display:block}
   scrollbar-width:none;
 }
 #galleryGrid::-webkit-scrollbar{display:none;}
-
 .galleryItem{
   flex:0 0 auto;
   width:220px;
@@ -229,34 +291,28 @@ main{display:block}
   scroll-snap-align:start;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(15,23,42,.65);
+  background:rgba(15,23,42,.55);
   overflow:hidden;
-  min-height:120px;
   display:flex;align-items:center;justify-content:center;
   color:var(--muted);font-weight:900;position:relative;
   box-shadow: 0 16px 30px rgba(0,0,0,.35);
   cursor:pointer;
 }
-
 .galleryItem img{width:100%;height:100%;object-fit:cover;display:block;}
-
 .galleryItem::after{
   content:"";
   position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.55) 100%);
   pointer-events:none;
 }
-
 .galleryItem .cap{
   position:absolute;left:10px;right:10px;bottom:10px;
   background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.14);
   padding:8px 10px;border-radius:12px;
-  color:#fff;font-size:.78rem;font-weight:900;
-  display:block;
+  color:#fff;font-size:.78rem;font-weight:950;
   z-index:2;
 }
-
 .galleryItem .del{
   position:absolute;top:10px;right:10px;
   background:rgba(0,0,0,.55);
@@ -267,15 +323,11 @@ main{display:block}
 }
 .galleryItem.admin .del{display:block}
 
-/* Desktop arrows */
 .galleryNav{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
   z-index:5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   width:42px;height:42px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.18);
@@ -286,23 +338,22 @@ main{display:block}
   user-select:none;
   -webkit-tap-highlight-color: transparent;
   box-shadow:0 18px 40px rgba(0,0,0,.35);
+  display:flex; align-items:center; justify-content:center;
 }
 .galleryNav:active{transform:translateY(-50%) scale(.98)}
 .galleryNav.left{left:10px}
 .galleryNav.right{right:10px}
 .galleryNav[disabled]{opacity:.35;cursor:default;pointer-events:none}
 
-/* ====== LIGHTBOX (NEW) ====== */
+/* ============ Lightbox ============ */
 #lightboxBackdrop{
-  position:fixed;
-  inset:0;
+  position:fixed; inset:0;
   background:rgba(0,0,0,.72);
   backdrop-filter: blur(10px);
   display:none;
   z-index:5000;
   padding:14px;
 }
-
 #lightboxModal{
   position:relative;
   width:min(1100px, 100%);
@@ -316,14 +367,7 @@ main{display:block}
   display:flex;
   flex-direction:column;
 }
-
-#lbStage{
-  flex:1;
-  display:grid;
-  place-items:center;
-  padding:14px;
-}
-
+#lbStage{flex:1; display:grid; place-items:center; padding:14px;}
 #lbImg{
   max-width:100%;
   max-height:100%;
@@ -332,22 +376,19 @@ main{display:block}
   box-shadow:0 20px 60px rgba(0,0,0,.55);
   object-fit:contain;
 }
-
 .lbCap{
   padding:10px 14px;
   border-top:1px solid rgba(255,255,255,.10);
   color:#e5e7eb;
   background:rgba(0,0,0,.30);
-  font-weight:850;
+  font-weight:900;
   font-size:.9rem;
-  min-height:44px;
+  min-height:46px;
   display:flex;
   align-items:center;
 }
-
 #lbClose{
-  position:absolute;
-  top:12px; right:12px;
+  position:absolute; top:12px; right:12px;
   width:40px;height:40px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.18);
@@ -357,10 +398,8 @@ main{display:block}
   cursor:pointer;
   z-index:2;
 }
-
 .lbArrow{
-  position:absolute;
-  top:50%;
+  position:absolute; top:50%;
   transform:translateY(-50%);
   width:44px;height:44px;
   border-radius:999px;
@@ -375,14 +414,23 @@ main{display:block}
 #lbNext{right:12px}
 .lbArrow[disabled]{opacity:.35;cursor:default;pointer-events:none}
 
-/* Footer */
+/* ============ Footer ============ */
 footer{
+  margin-top:10px;
   border-top:1px solid rgba(255,255,255,.08);
-  padding:22px 16px;display:grid;gap:10px;
-  max-width:1200px;margin:0 auto;
+  padding:22px 16px;
 }
-footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
-.footerRow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;}
+.footer-inner{
+  max-width:1200px; margin:0 auto;
+  display:grid; gap:10px;
+}
+.footerRow{
+  display:flex; flex-wrap:wrap;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
 .footerLinks{display:flex;flex-wrap:wrap;gap:10px;}
 .footerLinks a{
   color:var(--text);text-decoration:none;
@@ -390,7 +438,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   padding:8px 12px;border-radius:999px;font-weight:900;font-size:.85rem;
 }
 
-/* VIN Panel */
+/* ============ VIN Panel ============ */
 #vin-panel-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:997;}
 #vin-panel{
   position:fixed;left:50%;transform:translateX(-50%);
@@ -413,7 +461,16 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   background:#0c1612;color:#fff;text-transform:uppercase;letter-spacing:.6px;
 }
 #vin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
-#vin-panel button{width:100%;margin-top:0;padding:11px;border-radius:12px;border:none;font-weight:950;cursor:pointer;}
+#vin-panel button{
+  width:100%;
+  padding:11px;
+  border-radius:12px;
+  border:none;
+  font-weight:950;
+  cursor:pointer;
+}
+#vin-panel button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0b0f14;}
+#vin-panel button.secondary{background:#0f1714;color:#fff;border:1px solid rgba(255,255,255,.18);}
 #vin-status{margin-top:10px;font-size:12px;min-height:18px;color:#9bb0a6;display:flex;align-items:center;gap:8px;}
 .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:0 0 0 3px rgba(255,255,255,.06);}
 #vin-status.ok{color:var(--ok)} #vin-status.ok .dot{background:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.18)}
@@ -424,6 +481,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 .k{color:#9bb0a6;max-width:60%} .v{font-weight:950;text-align:right;max-width:40%;overflow-wrap:anywhere}
 .vehicle{text-align:center;font-weight:950;margin-top:10px}
 
+/* Toast */
 .toast{
   position:fixed;left:50%;transform:translateX(-50%);
   bottom:calc(env(safe-area-inset-bottom) + 14px);
@@ -432,7 +490,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   display:none;z-index:9999;box-shadow:0 20px 40px rgba(0,0,0,.45);
 }
 
-/* Admin Modals */
+/* Modals */
 #adminModalBackdrop,#addModalBackdrop{
   position:fixed; inset:0; background:rgba(0,0,0,.62);
   display:none; z-index:2000;
@@ -462,56 +520,26 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 .modalActions button{flex:1}
 .helper{margin-top:10px;color:var(--muted);font-size:.85rem;line-height:1.35;}
 
-@media(max-width:900px){ .hero{grid-template-columns:1fr} }
+/* ============ Responsive ============ */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr; padding:26px 0 14px;}
+}
 
-/* ✅ PHONE FRIENDLY PATCH */
 @media(max-width:600px){
-  .header-inner{
-    padding:6px 12px;
-    flex-wrap:wrap;
-    gap:10px;
+  .header-inner{flex-wrap:wrap; justify-content:center; gap:10px; padding:10px 12px;}
+  .brand{width:100%; justify-content:center;}
+  .logoMark{
+    width:min(640px, 92vw);
+    height:64px;               /* a bit taller on phones */
+    justify-content:center;    /* center it */
   }
+  nav{width:100%; justify-content:center; padding-bottom:4px;}
+  nav a{padding:10px 14px; font-size:.92rem; flex-shrink:0;}
 
-  .logo{
-    width:100%;
-    justify-content:center;
-  }
-
-  /* keep logo visually big but header short */
-  :root{
-    --logo-img-h:150px;
-    --logo-box-h:82px;
-    --logo-shift:-34px;
-  }
-
-  nav{
-    width:100%;
-    justify-content:center;
-    gap:8px;
-    overflow-x:auto;
-    padding-bottom:6px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  nav::-webkit-scrollbar{display:none;}
-  nav a{
-    flex-shrink:0;
-    padding:10px 14px;
-    font-size:.9rem;
-  }
-
-  .hero{
-    padding:22px 12px 14px;
-    grid-template-columns:1fr;
-    gap:14px;
-  }
-  .hero h1{
-    font-size:clamp(1.7rem, 8vw, 2.3rem);
-    line-height:1.05;
-  }
-  .btn{width:100%}
-
-  .stats,.sell-grid{grid-template-columns:1fr}
+  .container{padding:0 12px;}
+  .btnRow .btn{width:100%}
+  .stats{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
   #vin-panel{left:0; right:0; bottom:env(safe-area-inset-bottom); width:100%; max-height:78vh; transform:none; border-radius:18px 18px 0 0;}
   .galleryItem{width:78vw; max-width:320px;}
   .galleryNav{display:none;}
@@ -525,12 +553,13 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 
 <header>
   <div class="header-inner">
-    <div class="logo">
+    <div class="brand">
       <div class="logoMark">
-        <img alt="Two Little Bees Auto Parts"
-             src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/new.logo.png?raw=true">
+        <img
+          alt="Two Little Bees Auto Parts"
+          src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/new.logo.png?raw=true"
+        />
       </div>
-      <span></span>
     </div>
 
     <nav>
@@ -543,117 +572,121 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
 </header>
 
 <main id="top">
-  <section class="hero">
-    <div>
-      <h1>The Right Parts.<br>Every Time.<br>Built on Trust.</h1>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <h1>The Right Parts.<br>Every Time.<br>Built on Trust.</h1>
 
-      <div class="badges">
-        <div class="badge"><span class="dot"></span> Established in Indianapolis</div>
-        <div class="badge"><span class="dot"></span> VIN-Verified</div>
-        <div class="badge"><span class="dot"></span> Fast Counter Support</div>
-      </div>
-
-      <p>Live inventory tied to real vehicles. Call or search — we move fast, verify fitment, and keep it simple.</p>
-
-      <div class="btns">
-        <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a>
-        <a class="btn secondary" href="parts.html">🧰 Parts Inventory</a>
-        <a class="btn secondary" href="tel:3172437777">Call (317) 243-7777</a>
-        <a class="btn secondary" href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Get Directions</a>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><h3>10K+</h3><span>OEM Parts</span></div>
-        <div class="stat"><h3>1985–2026</h3><span>Coverage</span></div>
-        <div class="stat"><h3>Trusted</h3><span>Local Professionals</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>What We Sell</h3>
-      <div class="sell-grid">
-        <div class="sell-item"><span>✓</span> Engines & Transmissions</div>
-        <div class="sell-item"><span>✓</span> Suspension & Drivetrain</div>
-        <div class="sell-item"><span>✓</span> Body & Interior</div>
-        <div class="sell-item"><span>✓</span> Electrical Modules</div>
-        <div class="sell-item"><span>✓</span> OEM Used Parts</div>
-        <div class="sell-item"><span>✓</span> VIN-Verified Fitment</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="card">
-      <div class="sectionTitleRow">
-        <h3>About Us</h3>
-        <small>Ctrl + Shift + A to edit</small>
-      </div>
-
-      <div id="aboutText" class="admin-edit">
-        Two Little Bees Auto Parts is a locally owned auto parts business based in Indianapolis, focused on providing quality OEM used parts pulled from real vehicles.
-        <br><br>
-        We specialize in VIN-verified parts, making sure every engine, transmission, module, or body component is correctly matched before it ever leaves our yard.
-        That means fewer mistakes, no guesswork, and confidence that the part you’re buying is the right one.
-        <br><br>
-        Serving local repair shops, dealerships, and walk-in customers, we cover vehicles from 1985–2026 and maintain live inventory tied directly to the cars we dismantle.
-        When you call, you talk to someone who knows parts.
-        <br><br>
-        Built in Indianapolis and grounded in trust — accurate parts, straight answers, no wasted time.
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
-    <div class="card">
-      <div class="sectionTitleRow">
-        <h3>Gallery</h3>
-        <small id="galleryHint">Public view</small>
-      </div>
-
-      <div id="adminBar">
-        <div class="left">
-          <button class="btn secondary" id="adminLoginOpen" type="button">Admin Login</button>
-          <button class="btn secondary" id="adminLogout" type="button" style="display:none">Logout</button>
-          <button class="btn primary" id="addPhotoOpen" type="button" style="display:none">Add Photo</button>
+        <div class="badges">
+          <div class="badge"><span class="dot"></span> Established in Indianapolis</div>
+          <div class="badge"><span class="dot"></span> VIN-Verified</div>
+          <div class="badge"><span class="dot"></span> Fast Counter Support</div>
         </div>
 
-        <div class="pill bad" id="authPill">
-          <span class="tinyDot"></span>
-          <span id="authText">Not signed in</span>
+        <p>Live inventory tied to real vehicles. Call or search — we move fast, verify fitment, and keep it simple.</p>
+
+        <div class="btnRow">
+          <a class="btn primary" href="https://twolittlebeesautoparts.github.io/">Search Inventory</a>
+          <a class="btn secondary" href="parts.html">🧰 Parts Inventory</a>
+          <a class="btn secondary" href="tel:3172437777">Call (317) 243-7777</a>
+          <a class="btn secondary" href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Get Directions</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><strong>10K+</strong><span>OEM Parts</span></div>
+          <div class="stat"><strong>1985–2026</strong><span>Coverage</span></div>
+          <div class="stat"><strong>Trusted</strong><span>Local Professionals</span></div>
         </div>
       </div>
 
-      <div class="galleryWrap">
-        <button class="galleryNav left" id="gPrev" type="button" aria-label="Scroll left">‹</button>
-        <button class="galleryNav right" id="gNext" type="button" aria-label="Scroll right">›</button>
-
-        <div id="galleryGrid">
-          <div class="galleryItem" id="galleryLoading">Loading gallery…</div>
+      <div class="card">
+        <h3>What We Sell</h3>
+        <div class="grid2">
+          <div class="pillItem"><b>✓</b> Engines & Transmissions</div>
+          <div class="pillItem"><b>✓</b> Suspension & Drivetrain</div>
+          <div class="pillItem"><b>✓</b> Body & Interior</div>
+          <div class="pillItem"><b>✓</b> Electrical Modules</div>
+          <div class="pillItem"><b>✓</b> OEM Used Parts</div>
+          <div class="pillItem"><b>✓</b> VIN-Verified Fitment</div>
         </div>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <section class="section">
+      <div class="card">
+        <div class="sectionTitleRow">
+          <h3>About Us</h3>
+          <small>Ctrl + Shift + A to edit</small>
+        </div>
+
+        <div id="aboutText" class="admin-edit">
+          Two Little Bees Auto Parts is a locally owned auto parts business based in Indianapolis, focused on providing quality OEM used parts pulled from real vehicles.
+          <br><br>
+          We specialize in VIN-verified parts, making sure every engine, transmission, module, or body component is correctly matched before it ever leaves our yard.
+          That means fewer mistakes, no guesswork, and confidence that the part you’re buying is the right one.
+          <br><br>
+          Serving local repair shops, dealerships, and walk-in customers, we cover vehicles from 1985–2026 and maintain live inventory tied directly to the cars we dismantle.
+          When you call, you talk to someone who knows parts.
+          <br><br>
+          Built in Indianapolis and grounded in trust — accurate parts, straight answers, no wasted time.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="card">
+        <div class="sectionTitleRow">
+          <h3>Gallery</h3>
+          <small id="galleryHint">Public view</small>
+        </div>
+
+        <div id="adminBar">
+          <div class="left">
+            <button class="btn secondary" id="adminLoginOpen" type="button">Admin Login</button>
+            <button class="btn secondary" id="adminLogout" type="button" style="display:none">Logout</button>
+            <button class="btn primary" id="addPhotoOpen" type="button" style="display:none">Add Photo</button>
+          </div>
+
+          <div class="pill bad" id="authPill">
+            <span class="tinyDot"></span>
+            <span id="authText">Not signed in</span>
+          </div>
+        </div>
+
+        <div class="galleryWrap">
+          <button class="galleryNav left" id="gPrev" type="button" aria-label="Scroll left">‹</button>
+          <button class="galleryNav right" id="gNext" type="button" aria-label="Scroll right">›</button>
+
+          <div id="galleryGrid">
+            <div class="galleryItem" id="galleryLoading">Loading gallery…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </main>
 
 <footer>
-  <div class="footerRow">
-    <span>© 2026 Two Little Bees Auto Parts</span>
-    <span>
-      📞 <a href="tel:3172437777" style="color:inherit;text-decoration:none">(317) 243-7777</a><br>
-      📍 <a href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">507 S Tibbs Ave, Indianapolis</a>
-    </span>
-  </div>
+  <div class="footer-inner">
+    <div class="footerRow">
+      <span>© 2026 Two Little Bees Auto Parts</span>
+      <span>
+        📞 <a href="tel:3172437777" style="color:inherit;text-decoration:none">(317) 243-7777</a><br>
+        📍 <a href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">507 S Tibbs Ave, Indianapolis</a>
+      </span>
+    </div>
 
-  <div class="footerLinks">
-    <a href="https://twolittlebeesautoparts.github.io/">Inventory</a>
-    <a href="parts.html">Car Parts</a>
-    <a href="javascript:void(0)" onclick="toggleVin()">VIN Decoder</a>
-    <a href="tel:3172437777">Call</a>
-    <a href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Directions</a>
+    <div class="footerLinks">
+      <a href="https://twolittlebeesautoparts.github.io/">Inventory</a>
+      <a href="parts.html">Car Parts</a>
+      <a href="javascript:void(0)" onclick="toggleVin()">VIN Decoder</a>
+      <a href="tel:3172437777">Call</a>
+      <a href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Directions</a>
+    </div>
   </div>
 </footer>
 
+<!-- VIN -->
 <div id="vin-panel-backdrop" onclick="toggleVin()"></div>
 <div id="vin-panel" role="dialog" aria-modal="true" aria-label="VIN Decoder">
   <div id="vin-head">
@@ -670,9 +703,9 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div id="vehicle" class="vehicle"></div>
   <div id="results"></div>
 </div>
-
 <div id="print-sheet" style="display:none"></div>
 
+<!-- Admin Login Modal -->
 <div id="adminModalBackdrop"></div>
 <div id="adminModal" role="dialog" aria-modal="true" aria-label="Admin Login">
   <div class="modalHead">
@@ -694,6 +727,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div class="helper" id="adminMsg">Sign in using your Firebase user (Authentication → Users).</div>
 </div>
 
+<!-- Add Photo Modal -->
 <div id="addModalBackdrop"></div>
 <div id="addModal" role="dialog" aria-modal="true" aria-label="Add Gallery Photo">
   <div class="modalHead">
@@ -715,7 +749,7 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div class="helper" id="addMsg">Tip: use a direct image URL (ends in .jpg/.png) or a public Googleusercontent link.</div>
 </div>
 
-<!-- ===== LIGHTBOX (NEW) ===== -->
+<!-- Lightbox -->
 <div id="lightboxBackdrop" aria-hidden="true">
   <div id="lightboxModal" role="dialog" aria-modal="true" aria-label="Gallery image">
     <button id="lbClose" type="button" aria-label="Close">✕</button>
@@ -1075,12 +1109,10 @@ editable.forEach(el=>{
   async function addPhoto(){
     const url = normalizeImgUrl(photoUrl.value);
     const caption = (photoCaption.value || "").trim();
-
     if(!url){
       addMsg.textContent = "Paste a valid URL first.";
       return;
     }
-
     addDo.disabled = true;
     addMsg.textContent = "Adding…";
     try{
@@ -1097,15 +1129,6 @@ editable.forEach(el=>{
   }
 
   addDo.addEventListener("click", addPhoto);
-
-  function makeEmpty(msg){
-    galleryGrid.innerHTML = "";
-    const d = document.createElement("div");
-    d.className = "galleryItem";
-    d.textContent = msg;
-    galleryGrid.appendChild(d);
-    updateArrows();
-  }
 
   function updateArrows(){
     const max = galleryGrid.scrollWidth - galleryGrid.clientWidth;
@@ -1148,6 +1171,7 @@ editable.forEach(el=>{
     galleryGrid.scrollLeft = startLeft - dx;
   });
 
+  // Lightbox
   const lbBackdrop = document.getElementById("lightboxBackdrop");
   const lbImg = document.getElementById("lbImg");
   const lbCap = document.getElementById("lbCap");
@@ -1195,7 +1219,6 @@ editable.forEach(el=>{
   lbBackdrop.addEventListener("click", (e)=>{
     if(e.target === lbBackdrop) closeLightbox();
   });
-
   document.addEventListener("keydown", (e)=>{
     if(lbBackdrop.style.display !== "block") return;
     if(e.key === "Escape") closeLightbox();
@@ -1254,18 +1277,19 @@ editable.forEach(el=>{
     const items = snap.docs.map(d=> ({ id:d.id, ...d.data() })).filter(x=>x?.url);
     lbItems = items.map(x=>({ url:x.url, caption:x.caption || "" }));
 
-    if(!items.length){
-      makeEmpty("No photos yet.");
-      return;
-    }
-
     galleryGrid.innerHTML = "";
     const isAdmin = !!currentUser;
 
-    items.forEach((item, idx)=>{
-      addImgCard(item, isAdmin, idx);
-    });
+    if(!items.length){
+      const d = document.createElement("div");
+      d.className = "galleryItem";
+      d.textContent = "No photos yet.";
+      galleryGrid.appendChild(d);
+      requestAnimationFrame(updateArrows);
+      return;
+    }
 
+    items.forEach((item, idx)=> addImgCard(item, isAdmin, idx));
     requestAnimationFrame(updateArrows);
   }, (err)=>{
     console.error(err);
