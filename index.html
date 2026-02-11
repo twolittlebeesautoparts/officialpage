@@ -74,14 +74,20 @@ header{
   font-weight:950;
   white-space:nowrap;
 }
+
+/* ✅ LOGO IMAGE (NO BACKGROUND BOX) */
 .logo img{
-  height:58px;
+  height:175px;
   width:auto;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 28px rgba(0,0,0,.28);
-  background:#0f172a;
+  display:block;
+  object-fit:contain;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.28));
 }
+
 .logo span{font-size:1rem;letter-spacing:.2px;}
 nav{display:flex;gap:8px;align-items:center}
 nav a{
@@ -464,8 +470,8 @@ footer span{color:var(--muted);font-size:.92rem;line-height:1.35}
   <div class="header-inner">
     <div class="logo">
       <img alt="Two Little Bees Auto Parts"
-           src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/logo.png?raw=true">
-      <span>Two Little Bees Auto Parts</span>
+           src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/new.logo.png?raw=true">
+      <spans</span>
     </div>
 
     <nav>
