@@ -390,6 +390,39 @@ select{
 .pill.ok .tinyDot{background:var(--ok); box-shadow:0 0 0 3px rgba(34,197,94,.18)}
 .pill.bad{border-color:rgba(239,68,68,.30)}
 .pill.bad .tinyDot{background:var(--bad); box-shadow:0 0 0 3px rgba(239,68,68,.18)}
+.pill.warn{border-color:rgba(245,158,11,.30)}
+.pill.warn .tinyDot{background:var(--warn); box-shadow:0 0 0 3px rgba(245,158,11,.18)}
+.pillBtn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.02);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  user-select:none;
+}
+.pillBtn:hover{filter:brightness(1.06); border-color: rgba(255,255,255,.20);}
+.pillBtn:active{transform:scale(.99)}
+.pulse{
+  position:relative;
+}
+.pulse::after{
+  content:"";
+  position:absolute;
+  right:8px; top:8px;
+  width:10px; height:10px;
+  border-radius:999px;
+  background:var(--accent);
+  box-shadow:0 0 0 0 rgba(244,196,48,.55);
+  animation:pulse 1.3s infinite;
+}
+@keyframes pulse{
+  0%{ box-shadow:0 0 0 0 rgba(244,196,48,.55); }
+  70%{ box-shadow:0 0 0 10px rgba(244,196,48,0); }
+  100%{ box-shadow:0 0 0 0 rgba(244,196,48,0); }
+}
 
 /* ============ Gallery Category Tabs ============ */
 .tabs{
@@ -679,7 +712,7 @@ footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
 .modalActions button{flex:1}
 .helper{margin-top:10px;color:var(--muted);font-size:.85rem;line-height:1.35;}
 
-/* ============ Sticky Mobile Action Bar (CALL ONLY) ============ */
+/* ============ Sticky Mobile Action Bar ============ */
 #ctaDock{
   position:fixed;
   left:0; right:0;
@@ -837,10 +870,15 @@ footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
           <a class="btn secondary" href="https://www.google.com/maps?q=507+S+Tibbs+Ave,+Indianapolis,+IN" target="_blank" rel="noopener">Get Directions</a>
         </div>
 
+        <!-- ✅ LIVE COUNTERS (auto updates from Firestore) -->
         <div class="stats">
-          <div class="stat"><strong>10K+</strong><span>OEM Parts</span></div>
+          <div class="stat"><strong id="statViews">—</strong><span>Total Website Views</span></div>
+          <div class="stat"><strong id="statUniqueToday">—</strong><span>Unique Visitors Today</span></div>
           <div class="stat"><strong>1985–2026</strong><span>Coverage</span></div>
-          <div class="stat"><strong>Trusted</strong><span>Local Pros</span></div>
+        </div>
+
+        <div class="miniNote" style="margin-top:10px">
+          <span style="color:var(--muted);font-weight:850">Tip:</span> You’ll see live visitor numbers above. Admins can also enable lead notifications in the Gallery section.
         </div>
       </div>
 
@@ -1055,6 +1093,13 @@ footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
             <button class="btn secondary" id="adminLoginOpen" type="button">Admin Login</button>
             <button class="btn secondary" id="adminLogout" type="button" style="display:none">Logout</button>
             <button class="btn primary" id="addPhotoOpen" type="button" style="display:none">Add Photo</button>
+
+            <!-- ✅ ADMIN-ONLY: lead notifications -->
+            <button class="pillBtn" id="notifToggle" type="button" style="display:none" title="Enable desktop notifications">🔔 Alerts: OFF</button>
+            <div class="pill warn" id="leadPill" style="display:none">
+              <span class="tinyDot"></span>
+              <span id="leadText">Leads: 0 new</span>
+            </div>
           </div>
 
           <div class="pill bad" id="authPill">
@@ -1112,7 +1157,7 @@ footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
   </div>
 </footer>
 
-<!-- Sticky CTA Dock (CALL ONLY + NO TEXT BUTTON) -->
+<!-- Sticky CTA Dock -->
 <div id="ctaDock" role="navigation" aria-label="Quick actions">
   <div class="ctaInner">
     <a class="ctaBtn" href="tel:3172437777" aria-label="Call Two Little Bees">(📞) Call</a>
@@ -1139,7 +1184,6 @@ footer span{color:var(--muted); font-size:.92rem; line-height:1.35}
   <div id="vehicle" class="vehicle"></div>
   <div id="results"></div>
 </div>
-<div id="print-sheet" style="display:none"></div>
 
 <!-- Admin Login Modal -->
 <div id="adminModalBackdrop"></div>
@@ -1387,22 +1431,49 @@ function renderVin(d, v){
   row("GVWR", d.GVWR);
 }
 
+/* ✅ PRINT: safe + no page wipe */
 function printSheet(){
-  const ps = document.getElementById("print-sheet");
-  ps.innerHTML = `
-    <div style="background:#fff;color:#000;padding:20px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
-      <img src="https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/new.logo.png?raw=true" alt="Two Little Bees" style="height:60px">
-      <h2 style="margin:10px 0 6px">TWO LITTLE BEES AUTO PARTS</h2>
-      <p>(317) 243-7777 • Indianapolis</p>
-      <p style="margin-top:6px">507 S Tibbs Ave, Indianapolis, IN</p>
-      <hr style="margin:12px 0">
-      <div style="font-weight:900">${escapeHtml(vehicleEl.innerText)}</div>
-      <div>${resultsEl.innerHTML}</div>
+  const logo = "https://github.com/twolittlebeesautoparts/OFFICIALPAGE/blob/main/new.logo.png?raw=true";
+  const html = `
+<!doctype html><html><head><meta charset="utf-8">
+<title>VIN Sheet</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:22px;background:#fff;color:#000}
+  .top{display:flex;gap:14px;align-items:center}
+  img{height:62px;object-fit:contain}
+  h2{margin:0;font-size:18px;letter-spacing:.4px}
+  p{margin:4px 0 0;color:#111}
+  hr{margin:14px 0;border:none;border-top:1px solid #ddd}
+  .row{display:flex;justify-content:space-between;gap:14px;padding:8px 10px;border:1px solid #eee;border-radius:10px;margin-top:8px;font-size:12px}
+  .k{color:#444;max-width:60%}
+  .v{font-weight:800;max-width:40%;text-align:right;overflow-wrap:anywhere}
+  .vehicle{font-weight:900;margin-top:10px}
+  @media print{ body{padding:0} .wrap{padding:18px} }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="top">
+    <img src="${logo}" alt="Two Little Bees">
+    <div>
+      <h2>TWO LITTLE BEES AUTO PARTS</h2>
+      <p>(317) 243-7777 • 507 S Tibbs Ave, Indianapolis, IN</p>
     </div>
-  `;
-  document.body.innerHTML = ps.outerHTML;
-  window.print();
-  location.reload();
+  </div>
+  <hr>
+  <div class="vehicle">${escapeHtml(vehicleEl.textContent || "Vehicle")}</div>
+  <div>${resultsEl.innerHTML}</div>
+</div>
+<script>
+  setTimeout(()=>{ window.print(); }, 250);
+  window.onafterprint = () => { window.close(); };
+<\/script>
+</body></html>`;
+  const w = window.open("", "_blank", "noopener,noreferrer,width=900,height=900");
+  if(!w){ alert("Pop-up blocked. Allow pop-ups to print."); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
 }
 
 /* ✅ Local admin edit mode (localStorage only) */
@@ -1439,9 +1510,25 @@ editable.forEach(el=>{
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    serverTimestamp,
+    query,
+    orderBy,
+    onSnapshot,
+    setDoc,
+    getDoc,
+    updateDoc,
+    increment,
+    limit,
+    where
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  const NOTIFY_EMAIL = "josueblas971@gmail.com"; // ✅ Email alerts destination (Trigger Email extension reads this)
+  const NOTIFY_EMAIL = "josueblas971@gmail.com"; // email alerts destination (Trigger Email extension reads this)
 
   const firebaseConfig = {
     apiKey: "AIzaSyBbbBWg1x-RVuvfWfKBnOQPldMOWBLHXe8",
@@ -1456,6 +1543,10 @@ editable.forEach(el=>{
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  // ===== UI refs
+  const statViews = document.getElementById("statViews");
+  const statUniqueToday = document.getElementById("statUniqueToday");
 
   const galleryGrid = document.getElementById("galleryGrid");
   const galleryLoading = document.getElementById("galleryLoading");
@@ -1494,13 +1585,106 @@ editable.forEach(el=>{
   const jcSubmit = document.getElementById("jcSubmit");
   const jcStatus = document.getElementById("jcStatus");
 
+  const notifToggle = document.getElementById("notifToggle");
+  const leadPill = document.getElementById("leadPill");
+  const leadText = document.getElementById("leadText");
+
   const galleryCol = collection(db, "gallery");
   const leadsCol = collection(db, "leads");
   const junkCol = collection(db, "junkLeads");
 
-  function show(el, on){ el.style.display = on ? "block" : "none"; }
+  function show(el, on){ if(el) el.style.display = on ? "block" : "none"; }
   function lockScroll(on){ document.body.style.overflow = on ? "hidden" : ""; }
 
+  // =========================
+  // ✅ ULTRA-LIGHT WEBSITE COUNTER
+  // =========================
+  function uid(){
+    const k = "tlb_uid";
+    let v = localStorage.getItem(k);
+    if(!v){
+      v = (crypto?.randomUUID ? crypto.randomUUID() : ("u_" + Math.random().toString(16).slice(2) + Date.now()));
+      localStorage.setItem(k, v);
+    }
+    return v;
+  }
+  function yyyy_mm_dd(d=new Date()){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const day = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+
+  const ANALYTICS_ROOT = doc(db, "analytics", "site"); // { totalViews, totalUnique, updatedAt }
+  function dailyDocId(){ return "daily_" + yyyy_mm_dd(); }
+  function dailyDocRef(){ return doc(db, "analyticsDaily", dailyDocId()); } // { date, views, unique, updatedAt }
+
+  async function recordPageView(){
+    // throttle: count a view max once every 30 min per browser
+    const now = Date.now();
+    const lastView = Number(localStorage.getItem("tlb_last_view_ts") || "0");
+    if(now - lastView < 30 * 60 * 1000) return; // 30 minutes
+    localStorage.setItem("tlb_last_view_ts", String(now));
+
+    const todayKey = "tlb_seen_" + yyyy_mm_dd();
+    const firstUniqueToday = !localStorage.getItem(todayKey);
+
+    if(firstUniqueToday){
+      localStorage.setItem(todayKey, "1");
+    }
+
+    // fire-and-forget style (but still awaited to avoid unhandled)
+    try{
+      // ensure docs exist
+      await setDoc(ANALYTICS_ROOT, { totalViews: 0, totalUnique: 0, updatedAt: serverTimestamp() }, { merge:true });
+      await setDoc(dailyDocRef(), { date: yyyy_mm_dd(), views: 0, unique: 0, updatedAt: serverTimestamp() }, { merge:true });
+
+      // increments
+      await updateDoc(ANALYTICS_ROOT, {
+        totalViews: increment(1),
+        ...(firstUniqueToday ? { totalUnique: increment(1) } : {}),
+        updatedAt: serverTimestamp()
+      });
+
+      await updateDoc(dailyDocRef(), {
+        views: increment(1),
+        ...(firstUniqueToday ? { unique: increment(1) } : {}),
+        updatedAt: serverTimestamp()
+      });
+    }catch(e){
+      // don't spam console; counters are non-critical
+      console.warn("Analytics write skipped:", e?.code || e);
+    }
+  }
+
+  // Live read counters
+  function safeNum(n){ return (typeof n === "number" && isFinite(n)) ? n : 0; }
+  function pretty(n){
+    const v = Number(n || 0);
+    if(v >= 1_000_000) return (v/1_000_000).toFixed(1).replace(/\.0$/,"") + "M";
+    if(v >= 1_000) return (v/1_000).toFixed(1).replace(/\.0$/,"") + "K";
+    return String(v);
+  }
+
+  function attachCounterListeners(){
+    onSnapshot(ANALYTICS_ROOT, (snap)=>{
+      const d = snap.data() || {};
+      statViews.textContent = pretty(safeNum(d.totalViews));
+    }, ()=>{ /* ignore */ });
+
+    onSnapshot(dailyDocRef(), (snap)=>{
+      const d = snap.data() || {};
+      statUniqueToday.textContent = pretty(safeNum(d.unique));
+    }, ()=>{ /* ignore */ });
+  }
+
+  // run counters at idle to keep page snappy
+  const idle = window.requestIdleCallback || ((fn)=> setTimeout(fn, 150));
+  idle(()=>{ recordPageView(); attachCounterListeners(); });
+
+  // =========================
+  // MODALS
+  // =========================
   function openLoginModal(){
     show(adminModalBackdrop,true);
     show(adminModal,true);
@@ -1606,6 +1790,9 @@ editable.forEach(el=>{
   }
   addDo.addEventListener("click", addPhoto);
 
+  // =========================
+  // GALLERY SCROLL
+  // =========================
   function updateArrows(){
     const max = galleryGrid.scrollWidth - galleryGrid.clientWidth;
     if(max <= 2){ gPrev.disabled = true; gNext.disabled = true; return; }
@@ -1621,7 +1808,9 @@ editable.forEach(el=>{
   gNext.addEventListener("click", ()=> scrollByCard(1));
   galleryGrid.addEventListener("scroll", ()=> requestAnimationFrame(updateArrows));
 
-  // Lightbox
+  // =========================
+  // LIGHTBOX
+  // =========================
   const lbBackdrop = document.getElementById("lightboxBackdrop");
   const lbImg = document.getElementById("lbImg");
   const lbCap = document.getElementById("lbCap");
@@ -1675,7 +1864,9 @@ editable.forEach(el=>{
     if(e.key === "ArrowRight") nextLightbox();
   });
 
-  // Category filter
+  // =========================
+  // CATEGORY FILTER
+  // =========================
   const tabs = Array.from(document.querySelectorAll("#galleryTabs .tab"));
   let activeCat = "All";
   function setActiveTab(cat){
@@ -1775,6 +1966,129 @@ editable.forEach(el=>{
     requestAnimationFrame(updateArrows);
   });
 
+  // =========================
+  // ✅ ADMIN NOTIFICATIONS + COUNTER (new leads)
+  // =========================
+  function canNotify(){
+    return "Notification" in window;
+  }
+  function notifState(){
+    return localStorage.getItem("tlb_notif_on") === "1";
+  }
+  function setNotifState(on){
+    localStorage.setItem("tlb_notif_on", on ? "1" : "0");
+  }
+  function updateNotifBtn(){
+    if(!notifToggle) return;
+    const on = notifState();
+    notifToggle.textContent = on ? "🔔 Alerts: ON" : "🔔 Alerts: OFF";
+  }
+  async function requestNotifPermission(){
+    if(!canNotify()) return false;
+    if(Notification.permission === "granted") return true;
+    if(Notification.permission === "denied") return false;
+    try{
+      const p = await Notification.requestPermission();
+      return p === "granted";
+    }catch{
+      return false;
+    }
+  }
+  function popDesktop(title, body){
+    if(!canNotify()) return;
+    if(Notification.permission !== "granted") return;
+    try{
+      new Notification(title, { body });
+    }catch{
+      // ignore
+    }
+  }
+
+  // lead counters
+  let unsubLeadWatch = null;
+  let lastSeenKey = "tlb_last_seen_leads_ts";
+  function getLastSeen(){ return Number(localStorage.getItem(lastSeenKey) || "0"); }
+  function setLastSeen(ts){ localStorage.setItem(lastSeenKey, String(ts || Date.now())); }
+
+  function attachLeadWatcher(){
+    if(unsubLeadWatch) { unsubLeadWatch(); unsubLeadWatch = null; }
+    const since = new Date(getLastSeen() || (Date.now() - 7*24*3600*1000)); // safety window
+    // newest 50 leads after "since"
+    const qParts = query(leadsCol, where("createdAt", ">", since), orderBy("createdAt", "desc"), limit(50));
+    const qJunk  = query(junkCol,  where("createdAt", ">", since), orderBy("createdAt", "desc"), limit(50));
+
+    let newestTs = getLastSeen();
+    let partCount = 0;
+    let junkCount = 0;
+
+    const renderLeadPill = ()=>{
+      const total = partCount + junkCount;
+      show(leadPill, true);
+      leadText.textContent = total ? `Leads: ${total} new (Parts: ${partCount}, Junk: ${junkCount})` : "Leads: 0 new";
+      // pulse if new
+      if(total) leadPill.classList.add("pulse"); else leadPill.classList.remove("pulse");
+    };
+
+    const u1 = onSnapshot(qParts, (snap)=>{
+      partCount = snap.size;
+      snap.docs.forEach(d=>{
+        const t = d.data()?.createdAt?.toMillis?.() || 0;
+        if(t > newestTs) newestTs = t;
+      });
+      renderLeadPill();
+      // desktop notify (only if enabled)
+      if(notifState() && snap.docChanges().some(c=>c.type === "added")){
+        popDesktop("New Part Request", "A customer submitted a part request.");
+      }
+    }, ()=>{});
+
+    const u2 = onSnapshot(qJunk, (snap)=>{
+      junkCount = snap.size;
+      snap.docs.forEach(d=>{
+        const t = d.data()?.createdAt?.toMillis?.() || 0;
+        if(t > newestTs) newestTs = t;
+      });
+      renderLeadPill();
+      if(notifState() && snap.docChanges().some(c=>c.type === "added")){
+        popDesktop("New Junk Car Lead", "A customer submitted a junk car lead.");
+      }
+    }, ()=>{});
+
+    // mark as seen when admin clicks the pill
+    leadPill.addEventListener("click", ()=>{
+      if(newestTs) setLastSeen(newestTs);
+      partCount = 0; junkCount = 0;
+      renderLeadPill();
+      showToast("Marked as seen");
+    }, { once:false });
+
+    unsubLeadWatch = ()=>{ u1(); u2(); };
+  }
+
+  notifToggle?.addEventListener("click", async ()=>{
+    if(!canNotify()){
+      alert("This browser doesn’t support desktop notifications.");
+      return;
+    }
+    if(notifState()){
+      setNotifState(false);
+      updateNotifBtn();
+      showToast("Alerts OFF");
+      return;
+    }
+    const ok = await requestNotifPermission();
+    if(!ok){
+      alert("Notifications blocked. Enable them in your browser settings, then try again.");
+      return;
+    }
+    setNotifState(true);
+    updateNotifBtn();
+    showToast("Alerts ON");
+  });
+
+  // =========================
+  // AUTH UI
+  // =========================
   onAuthStateChanged(auth, (user)=>{
     currentUser = user || null;
     const signedIn = !!user;
@@ -1786,7 +2100,19 @@ editable.forEach(el=>{
     authPill.classList.toggle("ok", signedIn);
     authPill.classList.toggle("bad", !signedIn);
     authText.textContent = signedIn ? `Signed in: ${user.email || "admin"}` : "Not signed in";
-    galleryHint.textContent = signedIn ? "Admin can add/delete" : "Public view";
+    galleryHint.textContent = signedIn ? "Admin can add/delete + lead alerts" : "Public view";
+
+    // show admin-only notifications UI
+    show(notifToggle, signedIn);
+    show(leadPill, signedIn);
+    if(signedIn){
+      updateNotifBtn();
+      attachLeadWatcher();
+    }else{
+      if(unsubLeadWatch){ unsubLeadWatch(); unsubLeadWatch = null; }
+      show(leadPill,false);
+      show(notifToggle,false);
+    }
 
     renderGallery();
     requestAnimationFrame(updateArrows);
@@ -1795,7 +2121,9 @@ editable.forEach(el=>{
   if(galleryLoading) galleryLoading.remove();
   requestAnimationFrame(updateArrows);
 
-  // ===== Email extension helper fields (Trigger Email extension reads these)
+  // =========================
+  // EMAIL BODY HELPERS
+  // =========================
   function buildEmailTextParts(payload){
     return [
       "NEW PART REQUEST",
@@ -1859,7 +2187,8 @@ editable.forEach(el=>{
       notes: safeTrim(document.getElementById("rqNotes").value, 800),
       photoUrl: normalizeImgUrl(document.getElementById("rqPhotoUrl").value) || "",
       createdAt: serverTimestamp(),
-      source: "website"
+      source: "website",
+      page: "home"
     };
 
     if(!payload.phone || (!payload.part && !(payload.year || payload.makeModel || payload.vin))){
@@ -1873,8 +2202,6 @@ editable.forEach(el=>{
     try{
       await addDoc(leadsCol, {
         ...payload,
-
-        // ✅ Trigger Email extension fields:
         to: NOTIFY_EMAIL,
         subject: `New Part Request — ${payload.part || "Part"} — ${payload.phone || "No phone"}`,
         text: buildEmailTextParts(payload)
@@ -1899,7 +2226,7 @@ editable.forEach(el=>{
   }
   if(rqSubmit) rqSubmit.addEventListener("click", submitRequest);
 
-  // ===== Leads: Cash for Junk Cars (writes email fields too)
+  // ===== Leads: Cash for Junk Cars
   async function submitJunk(){
     const payload = {
       type: "junk_car",
@@ -1911,7 +2238,8 @@ editable.forEach(el=>{
       title: safeTrim(document.getElementById("jcTitle").value, 20),
       notes: safeTrim(document.getElementById("jcNotes").value, 800),
       createdAt: serverTimestamp(),
-      source: "website"
+      source: "website",
+      page: "home"
     };
 
     if(!payload.phone || !payload.vehicle || !payload.location){
@@ -1925,8 +2253,6 @@ editable.forEach(el=>{
     try{
       await addDoc(junkCol, {
         ...payload,
-
-        // ✅ Trigger Email extension fields:
         to: NOTIFY_EMAIL,
         subject: `New Junk Car Lead — ${payload.vehicle || "Vehicle"} — ${payload.phone || "No phone"}`,
         text: buildEmailTextJunk(payload)
