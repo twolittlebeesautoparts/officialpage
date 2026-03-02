@@ -522,6 +522,39 @@ body.is-admin .admin-block{display:block;}
 }
 .quickBar .spacer{ flex:1 1 auto; min-width: 6px; }
 
+/* ====== NEW: Stats + Duplicates polish ====== */
+#statsBar .tag{
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+}
+#dupPanel{
+  box-shadow: 0 18px 55px rgba(0,0,0,.45);
+}
+.dupGroup{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.03);
+  margin-bottom:10px;
+}
+.dupKey{
+  font-weight:950;
+  color:rgba(244,196,48,.95);
+  margin-bottom:6px;
+}
+.dupRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  font-size:12px;
+  color:var(--muted);
+}
+.dupRow b{ color:var(--text); }
+
+/* ====== NEW: Extra “not boring” card glow when it has photos ====== */
+.vehicleCard.hasPhotos{
+  border-color: rgba(244,196,48,.18);
+  box-shadow: 0 14px 40px rgba(0,0,0,.35), 0 0 0 1px rgba(244,196,48,.08) inset;
+}
 </style>
 </head>
 
@@ -611,6 +644,40 @@ body.is-admin .admin-block{display:block;}
         <div class="chip" id="chipUnder100k" onclick="toggleChip('under100k')">Under 100k mi</div>
       </div>
     </div>
+
+    <!-- ===== NEW: Stats + Duplicates bar + panel ===== -->
+    <div class="quickBar" id="statsBar" style="margin-top:14px">
+      <span class="qbLabel">Inventory stats</span>
+
+      <span class="tag" id="statTotal">Total: 0</span>
+      <span class="tag" id="statPhotos">Photos: 0</span>
+      <span class="tag" id="statUnder100">Under 100k: 0</span>
+      <span class="tag ok" id="statGoodMotor">Good Motor: 0</span>
+      <span class="tag ok" id="statGoodTrans">Good Trans: 0</span>
+
+      <span class="spacer"></span>
+
+      <button class="smallBtn ghost" onclick="toggleDupPanel()">Duplicates</button>
+      <button class="smallBtn ghost" onclick="copyDupCSV()">Copy Dup CSV</button>
+    </div>
+
+    <div class="glass" id="dupPanel" style="display:none; margin-top:12px; padding:14px; border-radius:16px;">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <div>
+          <div style="font-weight:950; font-size:1rem;">Duplicate Report</div>
+          <div class="mini" id="dupMini">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="smallBtn" onclick="refreshDuplicates()">Refresh</button>
+          <button class="smallBtn ghost" onclick="toggleDupPanel()">Close</button>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <div id="dupResults" class="muted" style="font-size:13px;">No data yet.</div>
+    </div>
+    <!-- ===== END NEW ===== -->
 
     <div class="split">
       <div>
@@ -946,6 +1013,9 @@ let __partsUnsub = null;
 let __partsList = [];
 let __editingPartId = null;
 
+/* ===== NEW: duplicates store ===== */
+let __dup = { vinGroups: [], stockGroups: [], lastCSV: "" };
+
 /* ===== helpers ===== */
 function setNote(el, textEl, msg, type=""){
   textEl.textContent = msg || "";
@@ -1017,6 +1087,146 @@ function toggleChip(key){
   const el = document.getElementById(map[key]);
   if(el) el.classList.toggle("on", chipState[key]);
   queueApplyFilters();
+}
+
+/* ===== NEW: Stats + Duplicates functions ===== */
+function computeStats(){
+  const total = liveCars.length;
+
+  const withPhotos = liveCars.filter(c => Array.isArray(c.photos) && c.photos.filter(Boolean).length).length;
+
+  const under100 = liveCars.filter(c=>{
+    const m = (typeof c.mileage === "number") ? c.mileage : (parseMileage(String(c.mileage||"")) ?? null);
+    return (m !== null && m < 100000);
+  }).length;
+
+  const goodMotor = liveCars.filter(c => c.goodMotor === true).length;
+  const goodTrans = liveCars.filter(c => c.goodTrans === true).length;
+
+  const sTotal = document.getElementById("statTotal");
+  const sPhotos = document.getElementById("statPhotos");
+  const sUnder = document.getElementById("statUnder100");
+  const sGM = document.getElementById("statGoodMotor");
+  const sGT = document.getElementById("statGoodTrans");
+
+  if(sTotal) sTotal.textContent = `Total: ${total}`;
+  if(sPhotos) sPhotos.textContent = `Photos: ${withPhotos}`;
+  if(sUnder) sUnder.textContent = `Under 100k: ${under100}`;
+  if(sGM) sGM.textContent = `Good Motor: ${goodMotor}`;
+  if(sGT) sGT.textContent = `Good Trans: ${goodTrans}`;
+}
+
+function groupDuplicates(getKey){
+  const map = new Map();
+  liveCars.forEach(c=>{
+    const k = String(getKey(c) || "").trim().toUpperCase();
+    if(!k) return;
+    if(!map.has(k)) map.set(k, []);
+    map.get(k).push(c);
+  });
+  return [...map.entries()]
+    .filter(([k, arr]) => arr.length > 1)
+    .map(([k, arr]) => ({ key:k, cars:arr }));
+}
+
+function refreshDuplicates(){
+  const vinGroups = groupDuplicates(c=>c.vin);
+  const stockGroups = groupDuplicates(c=>c.stockNumber);
+
+  __dup.vinGroups = vinGroups;
+  __dup.stockGroups = stockGroups;
+
+  const rows = [["Type","Key","Count","DocId","Stock","VIN","Year","Make","Model","Mileage"]];
+  const pushRows = (type, groups) => {
+    groups.forEach(g=>{
+      g.cars.forEach(c=>{
+        rows.push([
+          type,
+          g.key,
+          String(g.cars.length),
+          String(c.id||""),
+          String(c.stockNumber||""),
+          String(c.vin||""),
+          String(c.year||""),
+          String(c.make||""),
+          String(c.model||""),
+          String((c.mileage??""))
+        ]);
+      });
+    });
+  };
+  pushRows("VIN", vinGroups);
+  pushRows("STOCK", stockGroups);
+
+  __dup.lastCSV = rows.map(r => `"${r.map(x=>String(x).replace(/"/g,'""')).join('","')}"`).join("\n");
+  renderDupPanel();
+}
+
+function renderDupPanel(){
+  const mini = document.getElementById("dupMini");
+  const results = document.getElementById("dupResults");
+
+  const vinCount = __dup.vinGroups.length;
+  const stockCount = __dup.stockGroups.length;
+
+  if(mini) mini.textContent = `VIN duplicate groups: ${vinCount} • Stock# duplicate groups: ${stockCount}`;
+
+  if(!results) return;
+
+  if(!vinCount && !stockCount){
+    results.innerHTML = `<div class="muted">No duplicates found 🎉</div>`;
+    return;
+  }
+
+  const block = (title, groups) => {
+    if(!groups.length) return `<div class="muted" style="margin-bottom:12px">No ${title} duplicates.</div>`;
+    return `
+      <div style="margin-bottom:14px">
+        <div style="font-weight:950; margin-bottom:10px">${title} duplicates</div>
+        ${groups.map(g=>{
+          const rows = g.cars.map(c=>{
+            const line = `${clean(c.year)} ${clean(c.make)} ${clean(c.model)}`.trim();
+            return `
+              <div class="dupRow">
+                <span><b>${escHtml(line || "Vehicle")}</b></span>
+                <span>• Stock: <b>${escHtml(c.stockNumber||"—")}</b></span>
+                <span>• VIN: <b>${escHtml(c.vin||"—")}</b></span>
+                <span>• Doc: <b>${escHtml(c.id||"—")}</b></span>
+              </div>
+            `;
+          }).join("");
+          return `
+            <div class="dupGroup">
+              <div class="dupKey">${escHtml(g.key)} <span class="muted">(${g.cars.length})</span></div>
+              ${rows}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+  };
+
+  results.innerHTML = block("VIN", __dup.vinGroups) + block("Stock#", __dup.stockGroups);
+}
+
+function toggleDupPanel(){
+  const p = document.getElementById("dupPanel");
+  if(!p) return;
+  const on = p.style.display !== "none";
+  p.style.display = on ? "none" : "block";
+  if(!on) refreshDuplicates();
+}
+
+async function copyDupCSV(){
+  if(!__dup.lastCSV){
+    refreshDuplicates();
+  }
+  if(!__dup.lastCSV){
+    showToast("No dup data");
+    return;
+  }
+  await copyText(__dup.lastCSV);
+  showToast("Dup CSV copied");
 }
 
 /* ===== secret logo clicks ===== */
@@ -1763,6 +1973,11 @@ function startListener(){
     countLine.textContent = `${liveCars.length} vehicles`;
     liveHint.textContent = "Live sync on";
     setNote(invMsg, invMsgText, liveCars.length ? "Tap a card. Use chips to filter fast." : "No vehicles yet.", liveCars.length ? "" : "warn");
+
+    // ===== NEW: always update stats + duplicates after load
+    computeStats();
+    refreshDuplicates();
+
     queueApplyFilters();
   }, (err)=>{
     setNote(invMsg, invMsgText, "Live sync failed: " + (err?.message || "rules/connection"), "bad");
@@ -1884,7 +2099,6 @@ function buildPhotoSquare(carId, photos){
   `;
 }
 
-
 function renderList(list){
   // FLIP list animation (smooth re-order / filter)
   const prev = new Map();
@@ -1897,9 +2111,13 @@ function renderList(list){
   }
 
   const html = list.map(c=>{
+    const rawStock = String(c.stockNumber || "");
+    const rawVin = String(c.vin || "");
+    const vehicleLineRaw = `${clean(c.year)} ${clean(c.make)} ${clean(c.model)}`.trim();
+
     const vehicleLine = `${escHtml(c.year||"")} ${escHtml(c.make||"")} ${escHtml(c.model||"")}`.trim() || "Vehicle";
-    const vinVal = escHtml(c.vin||"");
-    const stockVal = escHtml(c.stockNumber||"");
+    const vinVal = escHtml(rawVin);
+    const stockVal = escHtml(rawStock);
 
     const specsArr = [c.color, c.engine, c.transmission, c.drivetrain].filter(Boolean).map(escHtml);
     const gmText = ynLabel(c.goodMotor, "Motor");
@@ -1918,9 +2136,10 @@ function renderList(list){
     if(c.goodTrans===false) tags.push(`<span class="tag bad">Bad Trans ❌</span>`);
 
     const photoSquare = buildPhotoSquare(c.id, c.photos);
+    const hasPhotos = Array.isArray(c.photos) && c.photos.filter(Boolean).length;
 
     return `
-      <div class="vehicleCard" onclick="setSelected('${c.id}')">
+      <div class="vehicleCard ${hasPhotos ? "hasPhotos" : ""}" data-id="${c.id}" tabindex="0" onclick="setSelected('${c.id}')">
         ${photoSquare}
         <div style="min-width:0">
           <div class="vTitle">${vehicleLine}</div>
@@ -1928,10 +2147,10 @@ function renderList(list){
           <div class="kv">${tags.join("")}</div>
 
           <div class="actionsRow" onclick="event.stopPropagation()">
-            ${stockVal ? `<button class="smallBtn" onclick="copyText('${stockVal}')">Copy Stock</button>` : ``}
-            ${vinVal ? `<button class="smallBtn ghost" onclick="copyText('${vinVal}')">Copy VIN</button>` : ``}
+            ${rawStock ? `<button class="smallBtn" onclick="copyText('${rawStock.replace(/'/g,"\\'")}')">Copy Stock</button>` : ``}
+            ${rawVin ? `<button class="smallBtn ghost" onclick="copyText('${rawVin.replace(/'/g,"\\'")}')">Copy VIN</button>` : ``}
             <button class="smallBtn" onclick="openParts('${c.id}')">Parts</button>
-            ${vinVal ? `<button class="smallBtn ghost" onclick="copyText('${vehicleLine} • ${vinVal}')">Copy Line</button>` : ``}
+            ${rawVin ? `<button class="smallBtn ghost" onclick="copyText('${(vehicleLineRaw + " • " + rawVin).replace(/'/g,"\\'")}')">Copy Line</button>` : ``}
 
             ${isAdmin ? `
               <button class="smallBtn primary" onclick="openEdit('${c.id}')">Edit</button>
@@ -1951,7 +2170,6 @@ function renderList(list){
     const id = el.dataset.id;
     const from = prev.get(id);
     if(!from) {
-      // new element: fade/slide in
       el.animate([{opacity:0, transform:"translateY(10px)"},{opacity:1, transform:"translateY(0px)"}], {duration:240, easing:"ease-out"});
       return;
     }
@@ -1966,11 +2184,9 @@ function renderList(list){
   });
 }
 
-
 /* ===== RIGHT PANEL (placeholder removed) ===== */
 function setSelected(id){
   selectedId = id;
-  // highlight selected card
   document.querySelectorAll(".vehicleCard.selected").forEach(el=>el.classList.remove("selected"));
   const selEl = document.querySelector(`.vehicleCard[data-id="${id}"]`);
   if(selEl) selEl.classList.add("selected");
@@ -1978,7 +2194,7 @@ function setSelected(id){
   if(!id){
     dTitle.textContent = "Select a vehicle";
     dMini.textContent = "";
-    dBody.innerHTML = "";  /* <<< removed the paragraph */
+    dBody.innerHTML = "";
     if(window.quickBar) quickBar.innerHTML = "";
     return;
   }
@@ -1998,18 +2214,17 @@ function setSelected(id){
   dTitle.textContent = vehicleLine;
   dMini.textContent = `Stock: ${stock}`;
 
-  // sticky quick actions
   if(window.quickBar){
     const canCopyVin = vin && vin !== "—";
     const canCopyStock = stock && stock !== "—";
     quickBar.innerHTML = `
       <span class="qbLabel">Quick actions</span>
-      ${canCopyStock ? `<button class="smallBtn" onclick="copyText(\'${escHtml(stock)}\')">Copy Stock</button>` : ``}
-      ${canCopyVin ? `<button class="smallBtn ghost" onclick="copyText(\'${escHtml(vin)}\')">Copy VIN</button>` : ``}
-      <button class="smallBtn" onclick="openParts(\'${id}\')">Parts</button>
+      ${canCopyStock ? `<button class="smallBtn" onclick="copyText('${stock.replace(/'/g,"\\'")}')">Copy Stock</button>` : ``}
+      ${canCopyVin ? `<button class="smallBtn ghost" onclick="copyText('${vin.replace(/'/g,"\\'")}')">Copy VIN</button>` : ``}
+      <button class="smallBtn" onclick="openParts('${id}')">Parts</button>
       <span class="spacer"></span>
-      ${isAdmin ? `<button class="smallBtn primary" onclick="openEdit(\'${id}\')">Edit</button>
-                  <button class="smallBtn danger" onclick="removeCar(\'${id}\')">Delete</button>` : ``}
+      ${isAdmin ? `<button class="smallBtn primary" onclick="openEdit('${id}')">Edit</button>
+                  <button class="smallBtn danger" onclick="removeCar('${id}')">Delete</button>` : ``}
     `;
   }
 
@@ -2030,7 +2245,6 @@ function setSelected(id){
       <div class="dLine" style="margin-top:8px"><span>Trans</span><b>${escHtml(gt)}</b></div>
     </div>
   `;
-  // animate detail update
   try{ dBody.animate([{opacity:0, transform:"translateY(6px)"},{opacity:1, transform:"translateY(0)"}], {duration:220, easing:"ease-out"}); }catch(e){}
 }
 
@@ -2066,4 +2280,4 @@ function clearSearch(){
 </script>
 
 </body>
-</html>
+</html>.                                                                                                      
